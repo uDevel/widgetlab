@@ -23,12 +23,14 @@ import java.util.Random;
 public class TypingIndicatorView extends LinearLayout {
     public static final int ANIMATE_ORDER_RANDOM = 0;
     public static final int ANIMATE_ORDER_SEQUENCE = 1;
-    public static final int ANIMATE_ORDER_SEQUENCE_REVERSAL = 2;
+    public static final int ANIMATE_ORDER_CIRCULAR = 2;
+    public static final int ANIMATE_ORDER_LAST_FIRST = 3;
     public static final int BACKGROUND_TYPE_ROUNDED = 1;
     public static final int BACKGROUND_TYPE_SQUARE = 0;
     public static final int DOT_ANIMATION_WINK = 0;
     public static final int DOT_ANIMATION_GROW = 1;
     public static final int DOT_ANIMATION_DISAPPEAR = 2;
+    public static final int DOT_ANIMATION_SLIDING = 3;
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
     private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
     private static final int DOT_COUNT_DEF_VALUE = 3;
@@ -80,7 +82,14 @@ public class TypingIndicatorView extends LinearLayout {
                         nextAnimateDotIndex = 0;
                     }
                     break;
-                case ANIMATE_ORDER_SEQUENCE_REVERSAL:
+                case ANIMATE_ORDER_LAST_FIRST:
+                    animateDotIndex = dotsCount - 1 - nextAnimateDotIndex;
+                    nextAnimateDotIndex++;
+                    if (nextAnimateDotIndex >= dotsCount) {
+                        nextAnimateDotIndex = 0;
+                    }
+                    break;
+                case ANIMATE_ORDER_CIRCULAR:
                     animateDotIndex = nextAnimateDotIndex;
 
                     if (animateDotIndexDirectionPositive) {
@@ -95,6 +104,7 @@ public class TypingIndicatorView extends LinearLayout {
                         }
                     }
                     break;
+
             }
 
             dotViewList.get(animateDotIndex).startDotAnimation();
@@ -234,28 +244,20 @@ public class TypingIndicatorView extends LinearLayout {
     }
 
     private void init() {
+        setClipToPadding(false);
+        setClipChildren(false);
         if (isShowBackground) {
             setWillNotDraw(false);
             backgroundPaint = new Paint();
             backgroundPaint.setColor(backgroundColor);
         }
 
-       /* for (int i = 0; i < numOfDots; i++) {
-            WinkDotView winkDotView = new WinkDotView(getContext());
-            winkDotView.setMaxCompressRatio(dotMaxCompressRatio);
-            winkDotView.setColor(dotColor);
-            winkDotView.setSecondColor(dotSecondColor);
-            LinearLayout.LayoutParams layoutParams = new LayoutParams(dotSize, dotSize);
-            int halfHorizontalSpacing = dotHorizontalSpacing / 2;
-            layoutParams.setMargins(halfHorizontalSpacing, 0, halfHorizontalSpacing, 0);
-
-            addView(winkDotView, layoutParams);
-            dotViewList.add(winkDotView);
-        }*/
-
         for (int i = 0; i < numOfDots; i++) {
             DotView dotView;
             switch (dotAnimationType) {
+                case DOT_ANIMATION_SLIDING:
+                    dotView = new SlidingDotView(getContext());
+                    break;
                 case DOT_ANIMATION_WINK:
                     dotView = new GrowDotView(getContext());
                     break;
