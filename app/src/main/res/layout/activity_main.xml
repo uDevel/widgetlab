@@ -25,8 +25,8 @@
         app:dotCount="3"
         app:dotHorizontalSpacing="4dp"
         app:dotMaxCompressRatio="70%"
-        app:dotSecondColor="#dfdfdf"
-        app:dotSize="16dp"
+        app:dotSecondColor="#6ba4a4a4"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView
@@ -46,8 +46,8 @@
         app:dotCount="3"
         app:dotHorizontalSpacing="4dp"
         app:dotMaxCompressRatio="70%"
-        app:dotSecondColor="#dfdfdf"
-        app:dotSize="16dp"
+        app:dotSecondColor="#6ba4a4a4"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView
@@ -67,8 +67,8 @@
         app:dotCount="6"
         app:dotHorizontalSpacing="4dp"
         app:dotMaxCompressRatio="70%"
-        app:dotSecondColor="#dfdfdf"
-        app:dotSize="16dp"
+        app:dotSecondColor="#6ba4a4a4"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView
@@ -122,7 +122,7 @@
         app:backgroundType="rounded"
         app:dotColor="#a4a4a4"
         app:dotCount="3"
-        app:dotSize="48dp"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView
@@ -138,7 +138,7 @@
         app:dotCount="3"
         app:dotHorizontalSpacing="1dp"
         app:dotMaxCompressRatio="15%"
-        app:dotSize="32dp"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView
@@ -152,14 +152,14 @@
         app:animationOrder="sequence"
         app:backgroundColor="#dfdfdf"
         app:backgroundType="rounded"
-        app:dotAnimationDuration="1000"
+        app:dotAnimationDuration="700"
         app:dotAnimationType="Wink"
         app:dotColor="#a4a4a4"
         app:dotCount="3"
         app:dotHorizontalSpacing="4dp"
         app:dotMaxCompressRatio="70%"
         app:dotSecondColor="#5e648e"
-        app:dotSize="20dp"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView
@@ -178,7 +178,7 @@
         app:dotHorizontalSpacing="4dp"
         app:dotMaxCompressRatio="70%"
         app:dotSecondColor="#a4a4a4"
-        app:dotSize="20dp"
+        app:dotSize="10dp"
         app:showBackground="true"/>
 
     <com.udevel.widgetlab.TypingIndicatorView

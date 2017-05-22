@@ -13,6 +13,7 @@
             <enum name="Wink" value="1"/>
             <enum name="Disappear" value="2"/>
             <enum name="Sliding" value="3"/>
+            <enum name="BouncingSliding" value="4"/>
         </attr>
         <attr name="showBackground" format="boolean"/>
         <attr name="backgroundColor" format="color"/>

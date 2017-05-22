@@ -1,9 +1,6 @@
 package com.udevel.widgetlab;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,12 +8,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.FloatRange;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
-public class SlidingDotView extends DotView {
-    private static final String TAG = SlidingDotView.class.getSimpleName();
+public class BouncingSlidingDotView extends DotView {
+    private static final String TAG = BouncingSlidingDotView.class.getSimpleName();
     private Paint paint = new Paint();
     private int centerX;
     private int centerY;
@@ -30,7 +26,7 @@ public class SlidingDotView extends DotView {
     private Rect clipRect = new Rect();
     private int parentWidth;
 
-    public SlidingDotView(Context context) {
+    public BouncingSlidingDotView(Context context) {
         super(context);
     }
 
@@ -50,7 +46,7 @@ public class SlidingDotView extends DotView {
         super.onLayout(changed, left, top, right, bottom);
         parentLeft = left + getWidth();
         parentWidth = ((View) getParent()).getWidth();
-        parentRight = parentWidth - left;
+        parentRight = parentWidth - getWidth() - left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         radius = (Math.min(getWidth(), getHeight()) / 2) / 1.2F;    // Save space for overshoot interpolator.
@@ -63,10 +59,6 @@ public class SlidingDotView extends DotView {
 
     @Override
     public void startDotAnimation() {
-
-        float ratioDxLeft = (parentLeft - getWidth() / 2F) / (parentWidth / 2F);
-        float ratioDxRight = (parentRight - getWidth() / 2F) / (parentWidth / 2F);
-
         stopDotAnimation();
         if (isAnimatingDisappear) {
             isAnimatingDisappear = false;
@@ -81,25 +73,9 @@ public class SlidingDotView extends DotView {
                         invalidate();
                     }
                 });
-                appearAnimator.setDuration((long) (animationTotalDuration * Math.sqrt(ratioDxLeft)));
+                appearAnimator.setDuration(animationTotalDuration);
                 appearAnimator.setInterpolator(new DecelerateInterpolator());
-
-                ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), dotSecondColor, dotFirstColor);
-                colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        dotColor = (int) animator.getAnimatedValue();
-                    }
-                });
-                colorAnimator.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        dotColor = dotFirstColor;
-                    }
-                });
-                colorAnimator.setDuration(animationTotalDuration);
-                colorAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                animatorAppearSet.playTogether(appearAnimator, colorAnimator);
+                animatorAppearSet.playTogether(appearAnimator);
             }
             animatorAppearSet.start();
         } else {
@@ -114,7 +90,7 @@ public class SlidingDotView extends DotView {
                         invalidate();
                     }
                 });
-                disappearAnimator.setDuration((long) (animationTotalDuration * Math.sqrt(ratioDxRight)));
+                disappearAnimator.setDuration(animationTotalDuration);
                 disappearAnimator.setInterpolator(new AccelerateInterpolator());
 
                 animatorDisappearSet.play(disappearAnimator);

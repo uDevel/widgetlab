@@ -31,6 +31,7 @@ public class TypingIndicatorView extends LinearLayout {
     public static final int DOT_ANIMATION_GROW = 1;
     public static final int DOT_ANIMATION_DISAPPEAR = 2;
     public static final int DOT_ANIMATION_SLIDING = 3;
+    public static final int DOT_ANIMATION_BOUNCING_SLIDING = 4;
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
     private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
     private static final int DOT_COUNT_DEF_VALUE = 3;
@@ -224,7 +225,7 @@ public class TypingIndicatorView extends LinearLayout {
             dotSecondColor = a.getColor(R.styleable.TypingIndicatorView_dotSecondColor, dotColor);
             dotMaxCompressRatio = a.getFraction(R.styleable.TypingIndicatorView_dotMaxCompressRatio, 1, 1, DOT_MAX_COMPRESS_RATIO_DEF_VALUE);
             dotAnimationDuration = a.getInteger(R.styleable.TypingIndicatorView_dotAnimationDuration, DOT_ANIMATION_DURATION_DEF_VALUE);
-            dotAnimationType = a.getInteger(R.styleable.TypingIndicatorView_dotAnimationType, DOT_ANIMATION_WINK);
+            dotAnimationType = a.getInteger(R.styleable.TypingIndicatorView_dotAnimationType, DOT_ANIMATION_TYPE_DEF_VALUE);
             isShowBackground = a.getBoolean(R.styleable.TypingIndicatorView_showBackground, false);
             backgroundType = a.getInteger(R.styleable.TypingIndicatorView_backgroundType, BACKGROUND_TYPE_DEF_VALUE);
             backgroundColor = a.getColor(R.styleable.TypingIndicatorView_backgroundColor, BACKGROUND_COLOR_DEF_VALUE);
@@ -255,6 +256,9 @@ public class TypingIndicatorView extends LinearLayout {
         for (int i = 0; i < numOfDots; i++) {
             DotView dotView;
             switch (dotAnimationType) {
+                case DOT_ANIMATION_BOUNCING_SLIDING:
+                    dotView = new BouncingSlidingDotView(getContext());
+                    break;
                 case DOT_ANIMATION_SLIDING:
                     dotView = new SlidingDotView(getContext());
                     break;
