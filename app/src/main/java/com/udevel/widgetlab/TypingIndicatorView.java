@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ public class TypingIndicatorView extends LinearLayout {
     public static final int BACKGROUND_TYPE_SQUARE = 0;
     public static final int DOT_ANIMATION_WINK = 0;
     public static final int DOT_ANIMATION_GROW = 1;
+    public static final int DOT_ANIMATION_DISAPPEAR = 2;
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
     private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
     private static final int DOT_COUNT_DEF_VALUE = 3;
@@ -57,7 +59,7 @@ public class TypingIndicatorView extends LinearLayout {
     private int dotAnimationType;
     private int animateFrequency;
     private int animationOrder;
-    private int nextAnimateDotIndex;
+    private int nextAnimateDotIndex = 0;
     private boolean animateDotIndexDirectionPositive = true;
 
     private Runnable dotAnimationRunnable = new Runnable() {
@@ -66,33 +68,36 @@ public class TypingIndicatorView extends LinearLayout {
             Log.d(TAG, "run() called");
             int dotsCount = dotViewList.size();
 
-
+            int animateDotIndex = 0;
             switch (animationOrder) {
                 case ANIMATE_ORDER_RANDOM:
-                    nextAnimateDotIndex = random.nextInt(dotsCount);
+                    animateDotIndex = random.nextInt(dotsCount);
                     break;
                 case ANIMATE_ORDER_SEQUENCE:
+                    animateDotIndex = nextAnimateDotIndex;
                     nextAnimateDotIndex++;
-                    if (nextAnimateDotIndex == dotsCount) {
+                    if (nextAnimateDotIndex >= dotsCount) {
                         nextAnimateDotIndex = 0;
                     }
                     break;
                 case ANIMATE_ORDER_SEQUENCE_REVERSAL:
+                    animateDotIndex = nextAnimateDotIndex;
+
                     if (animateDotIndexDirectionPositive) {
                         nextAnimateDotIndex++;
-                        if (nextAnimateDotIndex == dotsCount - 1) {
+                        if (nextAnimateDotIndex >= dotsCount - 1) {
                             animateDotIndexDirectionPositive = false;
                         }
                     } else {
                         nextAnimateDotIndex--;
-                        if (nextAnimateDotIndex == 0) {
+                        if (nextAnimateDotIndex <= 0) {
                             animateDotIndexDirectionPositive = true;
                         }
                     }
                     break;
             }
 
-            dotViewList.get(nextAnimateDotIndex).startDotAnimation();
+            dotViewList.get(animateDotIndex).startDotAnimation();
             long delayMillis;
             if (animateFrequency < 0L) {
                 delayMillis = (long) (500L + (2000L * random.nextFloat()));
@@ -114,13 +119,27 @@ public class TypingIndicatorView extends LinearLayout {
     }
 
     public TypingIndicatorView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
-    }
-
-    public TypingIndicatorView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        super(context, attrs, defStyleAttr);
         parseAttributes(context, attrs);
         init();
+    }
+
+    public static Path composeRoundedRectPath(float left, float top, float right, float bottom, float radius) {
+        Log.d(TAG, "composeRoundedRectPath() called with: left = [" + left + "], top = [" + top + "], right = [" + right + "], bottom = [" + bottom + "], radius = [" + radius + "]");
+        Path path = new Path();
+
+        path.moveTo(left + radius, top);
+        path.lineTo(right - radius, top);
+        path.quadTo(right - radius / 2, top - radius / 2, right, top + radius);
+        path.lineTo(right, bottom - radius);
+        path.quadTo(right, bottom, right - radius, bottom);
+        path.lineTo(left + radius, bottom);
+        path.quadTo(left, bottom, left, bottom - radius);
+        path.lineTo(left, top + radius);
+        path.quadTo(left, top, left + radius, top);
+        path.close();
+
+        return path;
     }
 
     @Override
@@ -145,10 +164,12 @@ public class TypingIndicatorView extends LinearLayout {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int radius = Math.min(getWidth(), getHeight());
+        int radius = Math.min(getWidth(), getHeight()) / 2;
         switch (backgroundType) {
             case BACKGROUND_TYPE_ROUNDED:
-                canvas.drawRoundRect(0, 0, getWidth(), getHeight(), radius, radius, backgroundPaint);
+                canvas.drawCircle(radius, radius, radius, backgroundPaint);
+                canvas.drawCircle(getWidth() - radius, radius, radius, backgroundPaint);
+                canvas.drawRect(radius, 0, getWidth() - radius, getHeight(), backgroundPaint);
                 break;
             case BACKGROUND_TYPE_SQUARE:
                 canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
@@ -183,16 +204,6 @@ public class TypingIndicatorView extends LinearLayout {
     }
 
     private void parseAttributes(@NonNull Context context, @Nullable AttributeSet attrs) {
-      /*      <attr name="dotSize" format="integer"/>
-        <attr name="dotColor" format="color"/>
-        <attr name="dotHorizontalSpacing" format="dimension"/>
-        <attr name="showBackground" format="boolean"/>
-        <attr name="backgroundColor" format="color"/>
-        <attr name="backgroundType" format="enum">
-            <enum name="square" value="0"/>
-            <enum name="rounded" value="1"/>
-        </attr>*/
-
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TypingIndicatorView, 0, 0);
 
         try {
@@ -215,6 +226,10 @@ public class TypingIndicatorView extends LinearLayout {
 
         if (dotMaxCompressRatio > 1F || dotMaxCompressRatio < 0F) {
             throw new IllegalArgumentException("dotMaxCompressRatio must be between 0% and 100%");
+        }
+
+        if (dotAnimationType == DOT_ANIMATION_DISAPPEAR && animationOrder != ANIMATE_ORDER_SEQUENCE) {
+            animationOrder = ANIMATE_ORDER_SEQUENCE;
         }
     }
 
@@ -244,12 +259,14 @@ public class TypingIndicatorView extends LinearLayout {
                 case DOT_ANIMATION_WINK:
                     dotView = new GrowDotView(getContext());
                     break;
+                case DOT_ANIMATION_DISAPPEAR:
+                    dotView = new DisappearDotView(getContext());
+                    break;
                 case DOT_ANIMATION_GROW:
                 default:
                     dotView = new WinkDotView(getContext());
                     break;
             }
-
             dotView.setAnimationDuration(dotAnimationDuration);
             dotView.setMaxCompressRatio(dotMaxCompressRatio);
             dotView.setColor(dotColor);

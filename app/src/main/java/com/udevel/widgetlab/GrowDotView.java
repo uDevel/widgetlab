@@ -55,9 +55,7 @@ public class GrowDotView extends DotView {
 
         if (animatorSet == null) {
             animatorSet = new AnimatorSet();
-            ValueAnimator growAnimator;
-
-            growAnimator = ValueAnimator.ofFloat(targetScale, 1.0F);
+            ValueAnimator growAnimator = ValueAnimator.ofFloat(targetScale, 1.0F);
             growAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

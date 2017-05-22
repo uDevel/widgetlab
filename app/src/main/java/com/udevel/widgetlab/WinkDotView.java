@@ -56,9 +56,7 @@ public class WinkDotView extends DotView {
 
         if (animatorSet == null) {
             animatorSet = new AnimatorSet();
-            ValueAnimator winkAnimator;
-
-            winkAnimator = ValueAnimator.ofFloat(1F, minScaleY);
+            ValueAnimator winkAnimator = ValueAnimator.ofFloat(1F, minScaleY);
             winkAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

@@ -11,6 +11,7 @@
         <attr name="dotAnimationType" format="enum">
             <enum name="grow" value="0"/>
             <enum name="Wink" value="1"/>
+            <enum name="Disappear" value="2"/>
         </attr>
         <attr name="showBackground" format="boolean"/>
         <attr name="backgroundColor" format="color"/>
