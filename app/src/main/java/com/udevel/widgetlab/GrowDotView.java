@@ -120,6 +120,8 @@ public class GrowDotView extends DotView {
     @Override
     public void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio) {
         targetScale = compressRatio;
+        scale = targetScale;
+        invalidate();
     }
 
     private void updateOvalRecF() {
