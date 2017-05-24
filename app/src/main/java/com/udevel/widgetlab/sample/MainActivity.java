@@ -1,8 +1,10 @@
-package com.udevel.widgetlab;
+package com.udevel.widgetlab.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import com.udevel.widgetlab.TypingIndicatorView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

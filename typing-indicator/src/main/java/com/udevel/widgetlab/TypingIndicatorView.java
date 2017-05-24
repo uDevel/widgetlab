@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
 public class TypingIndicatorView extends LinearLayout {
     public static final int ANIMATE_ORDER_RANDOM = 0;
     public static final int ANIMATE_ORDER_SEQUENCE = 1;
