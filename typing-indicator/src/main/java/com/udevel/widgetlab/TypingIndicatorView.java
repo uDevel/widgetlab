@@ -26,19 +26,19 @@ public class TypingIndicatorView extends LinearLayout {
     public static final int ANIMATE_ORDER_LAST_FIRST = 3;
     public static final int BACKGROUND_TYPE_ROUNDED = 1;
     public static final int BACKGROUND_TYPE_SQUARE = 0;
-    public static final int DOT_ANIMATION_WINK = 0;
-    public static final int DOT_ANIMATION_GROW = 1;
+    public static final int DOT_ANIMATION_GROW = 0;
+    public static final int DOT_ANIMATION_WINK = 1;
     public static final int DOT_ANIMATION_DISAPPEAR = 2;
     public static final int DOT_ANIMATION_SLIDING = 3;
     public static final int DOT_ANIMATION_BOUNCING_SLIDING = 4;
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
     private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
     private static final int DOT_COUNT_DEF_VALUE = 3;
-    private static final int DOT_SIZE_DEF_VALUE = 50;
-    private static final int DOT_COLOR_DEF_VALUE = Color.RED;
+    private static final int DOT_SIZE_DEF_VALUE = 30;
+    private static final int DOT_COLOR_DEF_VALUE = Color.LTGRAY;
     private static final float DOT_MAX_COMPRESS_RATIO_DEF_VALUE = 0.5F;
     private static final int DOT_ANIMATION_DURATION_DEF_VALUE = 600;
-    private static final int DOT_ANIMATION_TYPE_DEF_VALUE = DOT_ANIMATION_WINK;
+    private static final int DOT_ANIMATION_TYPE_DEF_VALUE = DOT_ANIMATION_GROW;
     private static final int DOT_HORIZONTAL_SPACING_DEF_VALUE = 20;
     private static final int BACKGROUND_COLOR_DEF_VALUE = Color.LTGRAY;
     private static final int ANIMATE_ORDER_DEF_VALUE = ANIMATE_ORDER_RANDOM;
@@ -262,14 +262,14 @@ public class TypingIndicatorView extends LinearLayout {
                     dotView = new SlidingDotView(getContext());
                     break;
                 case DOT_ANIMATION_WINK:
-                    dotView = new GrowDotView(getContext());
+                    dotView = new WinkDotView(getContext());
                     break;
                 case DOT_ANIMATION_DISAPPEAR:
                     dotView = new DisappearDotView(getContext());
                     break;
                 case DOT_ANIMATION_GROW:
                 default:
-                    dotView = new WinkDotView(getContext());
+                    dotView = new GrowDotView(getContext());
                     break;
             }
             dotView.setAnimationDuration(dotAnimationDuration);
