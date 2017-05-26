@@ -6,9 +6,9 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.support.annotation.FloatRange;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 public class DisappearDotView extends DotView {
@@ -89,10 +89,22 @@ public class DisappearDotView extends DotView {
                         invalidate();
                     }
                 });
+
+
                 disappearAnimator.setDuration(animationTotalDuration);
                 disappearAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-                animatorDisappearSet.play(disappearAnimator);
+                ValueAnimator shrinkAnimator = ValueAnimator.ofFloat(1F, 0F);
+                shrinkAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animator) {
+                        scale = (float) animator.getAnimatedValue();
+                    }
+                });
+                shrinkAnimator.setDuration(animationTotalDuration);
+                shrinkAnimator.setInterpolator(new AccelerateInterpolator());
+
+                animatorDisappearSet.playTogether(disappearAnimator, shrinkAnimator);
             }
             animatorDisappearSet.start();
         }

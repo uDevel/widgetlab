@@ -240,257 +240,222 @@
                 app:showBackground="true"/>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Dot horizontal space: default, 20dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_51"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_52"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotColor="#a4a4a4"
+                app:dotHorizontalSpacing="20dp"
+                app:showBackground="true"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Animation type: default(grow), wink, disappear, sliding "/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_61"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_62"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationType="Wink"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_63"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationType="Disappear"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+        </LinearLayout>
+
         <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view011"
+            android:id="@+id/typing_indicator_view_64"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:padding="4dp"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationType="Sliding"
-            app:dotColor="#a4a4a4"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="8dp"
-            app:animateFrequency="700"
             app:animationOrder="sequence"
             app:backgroundColor="#eaeaea"
             app:backgroundType="rounded"
-            app:dotAnimationDuration="600"
             app:dotAnimationType="Sliding"
             app:dotColor="#a4a4a4"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
             app:showBackground="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sliding animation - With background"/>
+            android:layout_margin="8dp"
+            android:text="Dot duration: default, 200, 2000 "/>
 
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view02"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="8dp"
-            app:animateFrequency="700"
-            app:animationOrder="lastOneFirst"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="600"
-            app:dotAnimationType="Sliding"
-            app:dotColor="#a4a4a4"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
+            android:orientation="horizontal">
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_71"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationType="Sliding"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_72"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationDuration="200"
+                app:dotAnimationType="Sliding"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_73"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationDuration="2000"
+                app:dotAnimationType="Sliding"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sliding with lastOneFirst animation order"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view03"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_margin="8dp"
-            android:padding="8dp"
-            app:animateFrequency="500"
-            app:animationOrder="lastOneFirst"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="800"
-            app:dotAnimationType="Sliding"
-            app:dotColor="#a4a4a4"
-            app:dotCount="6"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
+            android:text="Animate Frequency: default, 200, 2000 "/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sliding with lastOneFirst animation order again"/>
+            android:orientation="horizontal">
 
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            app:dotCount="5"
-            app:showBackground="false"/>
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_81"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationType="Sliding"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
 
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            app:animateFrequency="3000"
-            app:backgroundColor="@color/colorPrimary"
-            app:backgroundType="square"
-            app:dotAnimationDuration="3000"
-            app:dotColor="#fcbbd1"
-            app:dotCount="5"
-            app:dotSecondColor="@color/colorPrimary"
-            app:showBackground="true"/>
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_82"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animateFrequency="200"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationType="Sliding"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
 
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:paddingBottom="8dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotColor="#a4a4a4"
-            app:dotCount="3"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="8dp"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotColor="#a4a4a4"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="1dp"
-            app:dotMaxCompressRatio="15%"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="4dp"
-            app:animateFrequency="1500"
-            app:animationOrder="sequence"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="700"
-            app:dotAnimationType="Wink"
-            app:dotColor="#a4a4a4"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#5e648e"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="4dp"
-            app:animateFrequency="600"
-            app:animationOrder="sequence"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotColor="#eaeaea"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:paddingBottom="4dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="4dp"
-            app:animateFrequency="300"
-            app:animationOrder="circular"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="300"
-            app:dotColor="#eaeaea"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="8dp"
-            app:animateFrequency="1000"
-            app:animationOrder="sequence"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="800"
-            app:dotAnimationType="Disappear"
-            app:dotColor="#a4a4a4"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#eaeaea"
-            app:dotSize="16dp"
-            app:showBackground="true"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="4dp"
-            app:animateFrequency="500"
-            app:animationOrder="sequence"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="3000"
-            app:dotAnimationType="grow"
-            app:dotColor="#eaeaea"
-            app:dotCount="6"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#a4a4a4"
-            app:dotSize="20dp"
-            app:showBackground="true"/>
+            <com.udevel.widgetlab.TypingIndicatorView
+                android:id="@+id/typing_indicator_view_83"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:padding="4dp"
+                app:animateFrequency="2000"
+                app:animationOrder="sequence"
+                app:backgroundColor="#eaeaea"
+                app:backgroundType="rounded"
+                app:dotAnimationType="Sliding"
+                app:dotColor="#a4a4a4"
+                app:showBackground="true"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
