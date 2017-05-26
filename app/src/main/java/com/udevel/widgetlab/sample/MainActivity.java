@@ -30,14 +30,16 @@ public class MainActivity extends AppCompatActivity {
                     return ShowCaseFragment.newInstance();
                 case 1:
                     return DemoAttributeFragment.newInstance();
+                case 2:
+                    return DemoAttribute2Fragment.newInstance();
                 default:
-                    throw new IllegalArgumentException("We only have 2 fragments");
+                    throw new IllegalArgumentException("We only have 3 fragments");
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -47,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
                     return "Show Case";
                 case 1:
                     return "Attributes Demo";
+                case 2:
+                    return "Attributes Demo 2";
                 default:
-                    throw new IllegalArgumentException("We only have 2 fragments");
+                    throw new IllegalArgumentException("We only have 3 fragments");
             }
         }
     }

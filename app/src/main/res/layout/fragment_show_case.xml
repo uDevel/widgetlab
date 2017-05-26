@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,18 +14,26 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+        <android.support.v4.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="20dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default - random order, grow animation"/>
+
         <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view011"
+            android:id="@+id/typing_indicator_view2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="4dp"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationType="Sliding"
-            app:dotColor="#a4a4a4"
-            app:showBackground="true"/>
+            android:layout_margin="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sliding animation - With rounded background"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view01"
@@ -50,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sliding animation - With background"/>
+            android:text="Sliding with lastOneFirst animation order"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view02"
@@ -76,7 +85,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sliding with lastOneFirst animation order"/>
+            android:text="Sliding with lastOneFirst animation order again"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view03"
@@ -102,16 +111,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sliding with lastOneFirst animation order again"/>
-
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            app:dotCount="5"
-            app:showBackground="false"/>
+            android:text="Grow, random, 2 dot colors, frequency/duration 3000"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view3"
@@ -119,14 +119,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="8dp"
+            android:padding="8dp"
             app:animateFrequency="3000"
-            app:backgroundColor="@color/colorPrimary"
-            app:backgroundType="square"
+            app:backgroundColor="?attr/colorAccent"
+            app:backgroundType="rounded"
             app:dotAnimationDuration="3000"
-            app:dotColor="#fcbbd1"
+            app:dotColor="?attr/colorPrimary"
             app:dotCount="5"
-            app:dotSecondColor="@color/colorPrimary"
+            app:dotSecondColor="?attr/colorPrimaryDark"
             app:showBackground="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grow, random, 20 dp horizontal spacing"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view4"
@@ -142,8 +148,14 @@
             app:backgroundType="rounded"
             app:dotColor="#a4a4a4"
             app:dotCount="3"
+            app:dotHorizontalSpacing="20dp"
             app:dotSize="10dp"
             app:showBackground="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grow, random, 1 dp horizontal spacing, 15% compression"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view5"
@@ -161,6 +173,11 @@
             app:dotSize="10dp"
             app:showBackground="true"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wink, sequence, freq. 1500, dur. 700, 2 colors"/>
+
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view7"
             android:layout_width="wrap_content"
@@ -174,13 +191,18 @@
             app:backgroundType="rounded"
             app:dotAnimationDuration="700"
             app:dotAnimationType="Wink"
-            app:dotColor="#a4a4a4"
+            app:dotColor="#b9b9b9"
             app:dotCount="3"
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#5e648e"
             app:dotSize="10dp"
             app:showBackground="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grow, 2 colors but with 1 color same as bg color"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view8"
@@ -189,7 +211,7 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:padding="4dp"
-            app:animateFrequency="600"
+            app:animateFrequency="1000"
             app:animationOrder="sequence"
             app:backgroundColor="#eaeaea"
             app:backgroundType="rounded"
@@ -201,28 +223,10 @@
             app:dotSize="10dp"
             app:showBackground="true"/>
 
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view9"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:paddingBottom="4dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="4dp"
-            app:animateFrequency="300"
-            app:animationOrder="circular"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="300"
-            app:dotColor="#eaeaea"
-            app:dotCount="3"
-            app:dotHorizontalSpacing="4dp"
-            app:dotMaxCompressRatio="70%"
-            app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
-            app:showBackground="true"/>
+            android:text="Disappear, sequence, freq. 1000, dur. 800"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view10"
@@ -245,6 +249,11 @@
             app:dotSize="16dp"
             app:showBackground="true"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grow, sequence, freq. 600, dur. 3000"/>
+
         <com.udevel.widgetlab.TypingIndicatorView
             android:id="@+id/typing_indicator_view11"
             android:layout_width="wrap_content"
@@ -263,7 +272,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#a4a4a4"
-            app:dotSize="20dp"
+            app:dotSize="10dp"
             app:showBackground="true"/>
     </LinearLayout>
 </ScrollView>
