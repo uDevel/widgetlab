@@ -8,17 +8,18 @@
 
 
 
-# To use:
-
-  allprojects {
-    repositories {
-      ...
-      maven { url 'https://jitpack.io' }
-    }
+## Gradle:
+```xml
+allprojects {
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
   }
+}
+```
 
-
-
-  dependencies {
-            compile 'com.github.uDevel:widgetlab:0.9.1'
-    }
+```xml
+dependencies {
+          compile 'com.github.uDevel:widgetlab:0.9.1'
+}
+```
