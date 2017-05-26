@@ -85,3 +85,7 @@ dependencies {
           compile 'com.github.uDevel:widgetlab:0.9.1'
 }
 ```
+
+## Todos:
+- Optimizing gc.
+- More animation type.
