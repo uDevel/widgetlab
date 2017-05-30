@@ -7,9 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.FloatRange;
-import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BouncingSlidingDotView extends DotView {
     private static final String TAG = BouncingSlidingDotView.class.getSimpleName();
@@ -17,14 +20,15 @@ public class BouncingSlidingDotView extends DotView {
     private int centerX;
     private int centerY;
     private float radius;
-    private boolean isAnimatingDisappear = true;
-    private AnimatorSet animatorDisappearSet;
-    private AnimatorSet animatorAppearSet;
+    private AnimatorSet animatorSet;
     private int parentLeft;
     private int parentRight;
     private int targetLeft;
     private Rect clipRect = new Rect();
     private int parentWidth;
+    private int indexToParent = Integer.MIN_VALUE;
+    private float bounceFraction = 1F;
+    private List<Integer> targetLeftList = new ArrayList<>();
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -37,19 +41,37 @@ public class BouncingSlidingDotView extends DotView {
         clipRect.inset(-parentLeft + targetLeft, 0);
         canvas.save();
         canvas.translate(-parentLeft + targetLeft, 0);
-        canvas.drawCircle(centerX, centerY, radius, paint);
+        canvas.drawCircle(centerX, bounceFraction * centerY, radius, paint);
         canvas.restore();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        indexToParent = findIndexToParent((ViewGroup) getParent());
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        ViewGroup parent = (ViewGroup) getParent();
+
         parentLeft = left + getWidth();
-        parentWidth = ((View) getParent()).getWidth();
+        parentWidth = parent.getWidth();
         parentRight = parentWidth - getWidth() - left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         radius = (Math.min(getWidth(), getHeight()) / 2) / 1.2F;    // Save space for overshoot interpolator.
+
+
+        Log.d(TAG, "findIndexToParent(parent):" + findIndexToParent(parent));
+        int parentPaddingStart = parent.getPaddingStart();
+
+        Log.d(TAG, "left:" + left);
+        Log.d(TAG, "getWidth():" + getWidth());
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
+        Log.d(TAG, "layoutParams.getMarginEnd():" + layoutParams.getMarginEnd());
+        Log.d(TAG, "layoutParams.getMarginStart():" + layoutParams.getMarginStart());
     }
 
     @Override
@@ -60,64 +82,41 @@ public class BouncingSlidingDotView extends DotView {
     @Override
     public void startDotAnimation() {
         stopDotAnimation();
-        if (isAnimatingDisappear) {
-            isAnimatingDisappear = false;
-            if (animatorAppearSet == null) {
-                animatorAppearSet = new AnimatorSet();
+        animatorSet = new AnimatorSet();
 
-                ValueAnimator appearAnimator = ValueAnimator.ofInt(0, parentLeft);
-                appearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        targetLeft = (int) animator.getAnimatedValue();
-                        invalidate();
-                    }
-                });
-                appearAnimator.setDuration(animationTotalDuration);
-                appearAnimator.setInterpolator(new DecelerateInterpolator());
-                animatorAppearSet.playTogether(appearAnimator);
+        ValueAnimator slidingAnimator = ValueAnimator.ofInt(0, parentLeft);
+        slidingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                targetLeft = (int) animator.getAnimatedValue();
+                invalidate();
             }
-            animatorAppearSet.start();
-        } else {
-            isAnimatingDisappear = true;
-            if (animatorDisappearSet == null) {
-                animatorDisappearSet = new AnimatorSet();
-                ValueAnimator disappearAnimator = ValueAnimator.ofInt(parentLeft, parentLeft + parentRight + getWidth());
-                disappearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animator) {
-                        targetLeft = (int) animator.getAnimatedValue();
-                        invalidate();
-                    }
-                });
-                disappearAnimator.setDuration(animationTotalDuration);
-                disappearAnimator.setInterpolator(new AccelerateInterpolator());
+        });
 
-                animatorDisappearSet.play(disappearAnimator);
+        ValueAnimator bounceAnimator = ValueAnimator.ofFloat(getHeight(), 0);
+        bounceAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                bounceFraction = animator.getAnimatedFraction();
             }
-            animatorDisappearSet.start();
-        }
+        });
+
+        animatorSet.playTogether(slidingAnimator, bounceAnimator);
+        animatorSet.start();
     }
 
     @Override
     public void stopDotAnimation() {
-        if (animatorDisappearSet != null) {
-            animatorDisappearSet.isStarted();
-            animatorDisappearSet.cancel();
-        }
-        if (animatorAppearSet != null) {
-            animatorAppearSet.isStarted();
-            animatorAppearSet.cancel();
+        if (animatorSet != null) {
+            animatorSet.isStarted();
+            animatorSet.cancel();
         }
     }
 
     @Override
     public boolean isAnimating() {
-        if (animatorDisappearSet != null && animatorDisappearSet.isStarted()) {
-            return true;
-        }
-
-        if (animatorAppearSet != null && animatorAppearSet.isStarted()) {
+        if (animatorSet != null && animatorSet.isStarted()) {
             return true;
         }
 
@@ -127,5 +126,14 @@ public class BouncingSlidingDotView extends DotView {
     @Override
     protected void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio) {
         // not needed
+    }
+
+    private int findIndexToParent(@NonNull ViewGroup parent) {
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            if (parent.getChildAt(i) == this) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

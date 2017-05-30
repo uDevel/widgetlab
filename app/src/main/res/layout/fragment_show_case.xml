@@ -14,6 +14,15 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
+        <com.udevel.widgetlab.TypingIndicatorView
+            android:id="@+id/typing_indicator_viewtest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:padding="20dp"
+            app:dotAnimationType="BouncingSliding"/>
+
         <android.support.v4.widget.Space
             android:layout_width="0dp"
             android:layout_height="20dp"/>
