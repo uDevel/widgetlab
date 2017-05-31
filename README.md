@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/uDevel/widgetlab.svg)](https://jitpack.io/#uDevel/widgetlab)
+
 # Typing indicator or wait progress animation.
 
 <img src="https://media.giphy.com/media/CSIyqIAxVFzhK/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/kPZRmEfmctbck/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/CSwfaFSSBvL6U/giphy.gif" width="30%" />
