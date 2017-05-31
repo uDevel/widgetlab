@@ -1,5 +1,6 @@
 package com.udevel.widgetlab;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -10,6 +11,9 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ public class BouncingSlidingDotView extends DotView {
     private int indexToParent = Integer.MIN_VALUE;
     private float bounceFraction = 1F;
     private List<Integer> targetLeftList = new ArrayList<>();
+    private long ratioAnimationTotalDuration = 0;
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -61,7 +66,7 @@ public class BouncingSlidingDotView extends DotView {
         parentRight = parentWidth - getWidth() - left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2) / 1.2F;    // Save space for overshoot interpolator.
+        radius = (Math.min(getWidth(), getHeight()) / 2);
 
 
         Log.d(TAG, "findIndexToParent(parent):" + findIndexToParent(parent));
@@ -72,11 +77,12 @@ public class BouncingSlidingDotView extends DotView {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
         Log.d(TAG, "layoutParams.getMarginEnd():" + layoutParams.getMarginEnd());
         Log.d(TAG, "layoutParams.getMarginStart():" + layoutParams.getMarginStart());
+        ratioAnimationTotalDuration = (long) (animationTotalDuration * (findIndexToParent(parent) + 1F) / parent.getChildCount());
     }
 
     @Override
     protected void init() {
-        paint = new Paint();
+
     }
 
     @Override
@@ -92,17 +98,55 @@ public class BouncingSlidingDotView extends DotView {
                 invalidate();
             }
         });
+        slidingAnimator.setInterpolator(new LinearInterpolator());
+        slidingAnimator.setDuration(ratioAnimationTotalDuration);
 
-        ValueAnimator bounceAnimator = ValueAnimator.ofFloat(getHeight(), 0);
-        bounceAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+        AnimatorSet bounceSet = new AnimatorSet();
+        List<Animator> bounceAnimatorList = new ArrayList<>();
+
+        ValueAnimator initialDownAnimator = ValueAnimator.ofFloat(0F, 1F);
+        initialDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
-                bounceFraction = animator.getAnimatedFraction();
+                bounceFraction = (float) animator.getAnimatedValue();
             }
         });
+        bounceAnimatorList.add(initialDownAnimator);
 
-        animatorSet.playTogether(slidingAnimator, bounceAnimator);
+        for (int i = 1; i <= indexToParent; i++) {
+
+            ValueAnimator upAnimator = ValueAnimator.ofFloat(1F, 0F);
+            upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    bounceFraction = (float) animator.getAnimatedValue();
+                }
+            });
+            upAnimator.setInterpolator(new DecelerateInterpolator());
+
+            bounceAnimatorList.add(upAnimator);
+            ValueAnimator downAnimator = ValueAnimator.ofFloat(0F, 1F);
+            downAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    bounceFraction = (float) animator.getAnimatedValue();
+                }
+            });
+            downAnimator.setInterpolator(new AccelerateInterpolator());
+
+            bounceAnimatorList.add(downAnimator);
+        }
+
+        int size = bounceAnimatorList.size();
+        for (Animator animator : bounceAnimatorList) {
+            animator.setDuration(ratioAnimationTotalDuration / size);
+        }
+        bounceSet.playSequentially(bounceAnimatorList);
+        animatorSet.playTogether(slidingAnimator, bounceSet);
         animatorSet.start();
     }
 

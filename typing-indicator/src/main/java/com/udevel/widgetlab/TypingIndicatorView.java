@@ -34,7 +34,7 @@ public class TypingIndicatorView extends LinearLayout {
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
     private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
     private static final int DOT_COUNT_DEF_VALUE = 3;
-    private static final int DOT_SIZE_DEF_VALUE = 30;
+    private static final int DOT_SIZE_DEF_VALUE = 24;
     private static final int DOT_COLOR_DEF_VALUE = Color.LTGRAY;
     private static final float DOT_MAX_COMPRESS_RATIO_DEF_VALUE = 0.5F;
     private static final int DOT_ANIMATION_DURATION_DEF_VALUE = 600;

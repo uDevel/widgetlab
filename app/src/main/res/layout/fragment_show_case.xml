@@ -21,6 +21,9 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:padding="20dp"
+            app:animateFrequency="2000"
+            app:animationOrder="sequence"
+            app:dotAnimationDuration="1000"
             app:dotAnimationType="BouncingSliding"/>
 
         <android.support.v4.widget.Space
@@ -62,7 +65,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -88,7 +91,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -114,7 +117,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -158,7 +161,7 @@
             app:dotColor="#a4a4a4"
             app:dotCount="3"
             app:dotHorizontalSpacing="20dp"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -179,7 +182,7 @@
             app:dotCount="3"
             app:dotHorizontalSpacing="1dp"
             app:dotMaxCompressRatio="15%"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -205,7 +208,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#5e648e"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -229,7 +232,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -255,7 +258,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#eaeaea"
-            app:dotSize="16dp"
+            app:dotSize="12dp"
             app:showBackground="true"/>
 
         <TextView
@@ -281,7 +284,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
     </LinearLayout>
 </ScrollView>
