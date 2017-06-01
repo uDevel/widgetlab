@@ -1,6 +1,7 @@
 package com.udevel.widgetlab;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -9,7 +10,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -26,14 +26,14 @@ public class BouncingSlidingDotView extends DotView {
     private float radius;
     private AnimatorSet animatorSet;
     private int parentLeft;
-    private int parentRight;
     private int targetLeft;
     private Rect clipRect = new Rect();
     private int parentWidth;
     private int indexToParent = Integer.MIN_VALUE;
     private float bounceFraction = 1F;
-    private List<Integer> targetLeftList = new ArrayList<>();
     private long ratioAnimationTotalDuration = 0;
+    private float radiusScale = 0F;
+    private float compressRatio = 0.20F;
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -46,7 +46,7 @@ public class BouncingSlidingDotView extends DotView {
         clipRect.inset(-parentLeft + targetLeft, 0);
         canvas.save();
         canvas.translate(-parentLeft + targetLeft, 0);
-        canvas.drawCircle(centerX, bounceFraction * centerY, radius, paint);
+        canvas.drawCircle(centerX, bounceFraction * centerY, radius * radiusScale, paint);
         canvas.restore();
     }
 
@@ -61,22 +61,12 @@ public class BouncingSlidingDotView extends DotView {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
 
-        parentLeft = left + getWidth();
+        parentLeft = left - parent.getPaddingLeft() + centerX;
         parentWidth = parent.getWidth();
-        parentRight = parentWidth - getWidth() - left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         radius = (Math.min(getWidth(), getHeight()) / 2);
 
-
-        Log.d(TAG, "findIndexToParent(parent):" + findIndexToParent(parent));
-        int parentPaddingStart = parent.getPaddingStart();
-
-        Log.d(TAG, "left:" + left);
-        Log.d(TAG, "getWidth():" + getWidth());
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
-        Log.d(TAG, "layoutParams.getMarginEnd():" + layoutParams.getMarginEnd());
-        Log.d(TAG, "layoutParams.getMarginStart():" + layoutParams.getMarginStart());
         ratioAnimationTotalDuration = (long) (animationTotalDuration * (findIndexToParent(parent) + 1F) / parent.getChildCount());
     }
 
@@ -105,7 +95,7 @@ public class BouncingSlidingDotView extends DotView {
         AnimatorSet bounceSet = new AnimatorSet();
         List<Animator> bounceAnimatorList = new ArrayList<>();
 
-        ValueAnimator initialDownAnimator = ValueAnimator.ofFloat(0F, 1F);
+        ValueAnimator initialDownAnimator = ValueAnimator.ofFloat(-1F, 1F);
         initialDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
@@ -117,7 +107,7 @@ public class BouncingSlidingDotView extends DotView {
 
         for (int i = 1; i <= indexToParent; i++) {
 
-            ValueAnimator upAnimator = ValueAnimator.ofFloat(1F, 0F);
+            ValueAnimator upAnimator = ValueAnimator.ofFloat(1F, -1F);
             upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
                 @Override
@@ -128,7 +118,7 @@ public class BouncingSlidingDotView extends DotView {
             upAnimator.setInterpolator(new DecelerateInterpolator());
 
             bounceAnimatorList.add(upAnimator);
-            ValueAnimator downAnimator = ValueAnimator.ofFloat(0F, 1F);
+            ValueAnimator downAnimator = ValueAnimator.ofFloat(-1F, 1F);
             downAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
                 @Override
@@ -147,6 +137,19 @@ public class BouncingSlidingDotView extends DotView {
         }
         bounceSet.playSequentially(bounceAnimatorList);
         animatorSet.playTogether(slidingAnimator, bounceSet);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                radiusScale = 1F;
+                dotColor = dotFirstColor;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                radiusScale = compressRatio;
+                dotColor = dotSecondColor;
+            }
+        });
         animatorSet.start();
     }
 
@@ -169,7 +172,7 @@ public class BouncingSlidingDotView extends DotView {
 
     @Override
     protected void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio) {
-        // not needed
+        this.compressRatio = compressRatio;
     }
 
     private int findIndexToParent(@NonNull ViewGroup parent) {

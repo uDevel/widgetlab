@@ -20,11 +20,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="8dp"
-            android:padding="20dp"
+            android:padding="10dp"
             app:animateFrequency="2000"
-            app:animationOrder="sequence"
+            app:animationOrder="lastOneFirst"
+            app:backgroundColor="#eaeaea"
+            app:backgroundType="rounded"
             app:dotAnimationDuration="1000"
-            app:dotAnimationType="BouncingSliding"/>
+            app:dotAnimationType="BouncingSliding"
+            app:dotColor="#d50000"
+            app:dotSecondColor="#1565c0"
+            app:showBackground="true"/>
 
         <android.support.v4.widget.Space
             android:layout_width="0dp"
