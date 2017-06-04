@@ -29,25 +29,9 @@ public class GrowDotView extends DotView {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        paint.setColor(dotColor);
-        canvas.drawOval(ovalRectF, paint);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        centerX = getWidth() / 2;
-        centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2);
-        updateOvalRecF();
-    }
-
-    @Override
     protected void init() {
-        paint = new Paint();
+        // nothing to init.
     }
-
 
     @Override
     public void startDotAnimation() {
@@ -103,8 +87,7 @@ public class GrowDotView extends DotView {
 
     @Override
     public void stopDotAnimation() {
-        if (animatorSet != null) {
-            animatorSet.isStarted();
+        if (isAnimating()) {
             animatorSet.cancel();
         }
     }
@@ -122,6 +105,21 @@ public class GrowDotView extends DotView {
         targetScale = compressRatio;
         scale = targetScale;
         invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        paint.setColor(dotColor);
+        canvas.drawOval(ovalRectF, paint);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        centerX = getWidth() / 2;
+        centerY = getHeight() / 2;
+        radius = (Math.min(getWidth(), getHeight()) / 2);
+        updateOvalRecF();
     }
 
     private void updateOvalRecF() {

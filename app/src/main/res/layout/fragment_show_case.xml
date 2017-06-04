@@ -53,7 +53,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -79,7 +79,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -105,7 +105,30 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#6ba4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
+            app:showBackground="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Bouncing Sliding, lastOneFirst, 2 dot colors,\nfrequency 800, duration 2000"/>
+
+        <com.udevel.widgetlab.TypingIndicatorView
+            android:id="@+id/typing_indicator_view_bounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:padding="10dp"
+            app:animateFrequency="800"
+            app:animationOrder="lastOneFirst"
+            app:backgroundColor="#eaeaea"
+            app:backgroundType="rounded"
+            app:dotAnimationDuration="2000"
+            app:dotAnimationType="BouncingSliding"
+            app:dotColor="#d50000"
+            app:dotSecondColor="#1565c0"
             app:showBackground="true"/>
 
         <TextView
@@ -114,7 +137,7 @@
             android:text="Grow, random, 2 dot colors, frequency/duration 3000"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view3"
+            android:id="@+id/typing_indicator_view_grow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -149,7 +172,7 @@
             app:dotColor="#a4a4a4"
             app:dotCount="3"
             app:dotHorizontalSpacing="20dp"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -170,7 +193,7 @@
             app:dotCount="3"
             app:dotHorizontalSpacing="1dp"
             app:dotMaxCompressRatio="15%"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -196,7 +219,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#5e648e"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -220,7 +243,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
 
         <TextView
@@ -246,7 +269,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#eaeaea"
-            app:dotSize="16dp"
+            app:dotSize="12dp"
             app:showBackground="true"/>
 
         <TextView
@@ -272,7 +295,7 @@
             app:dotHorizontalSpacing="4dp"
             app:dotMaxCompressRatio="70%"
             app:dotSecondColor="#a4a4a4"
-            app:dotSize="10dp"
+            app:dotSize="8dp"
             app:showBackground="true"/>
     </LinearLayout>
 </ScrollView>

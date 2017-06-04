@@ -53,7 +53,7 @@ public class SlidingDotView extends DotView {
         parentRight = parentWidth - left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2) / 1.2F;    // Save space for overshoot interpolator.
+        radius = (Math.min(getWidth(), getHeight()) / 2);
     }
 
     @Override
