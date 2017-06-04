@@ -33,10 +33,12 @@ allprojects {
 Next add to your module level (app) build.gradle's dependencies block like this
 ```xml
 dependencies {
-          compile 'com.github.uDevel:widgetlab:0.9.1'
+          compile 'com.github.uDevel:widgetlab:0.9.2'
 }
 ```
 
+Lastest version   
+[![](https://jitpack.io/v/uDevel/widgetlab.svg)](https://jitpack.io/#uDevel/widgetlab)
 ## Todos:
 - Optimizing gc.
 - More animation type.
