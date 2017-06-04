@@ -2,7 +2,7 @@
 
 # Typing indicator or wait progress animation.
 
-<img src="./github_assets/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/kPZRmEfmctbck/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/CSwfaFSSBvL6U/giphy.gif" width="30%" />
+<img src="./github_assets/show_case_demo.gif" width="30%" /> <img src="./github_assets/attribute_demo1.gif" width="30%" /> <img src="./github_assets/attribute_demo2.gif" width="30%" />
 
 
 ## Video of Sample app:
