@@ -130,6 +130,22 @@
                 app:showBackground="true"/>
         </LinearLayout>
 
+        <com.udevel.widgetlab.TypingIndicatorView
+            android:id="@+id/typing_indicator_view_bounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:padding="4dp"
+            app:animateFrequency="800"
+            app:animationOrder="sequence"
+            app:backgroundColor="#eaeaea"
+            app:backgroundType="rounded"
+            app:dotAnimationDuration="2000"
+            app:dotAnimationType="BouncingSliding"
+            app:dotColor="#a4a4a4"
+            app:showBackground="true"/>
+
         <android.support.v4.widget.Space
             android:layout_width="0dp"
             android:layout_height="20dp"/>

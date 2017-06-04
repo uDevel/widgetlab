@@ -14,23 +14,6 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
-        <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_viewtest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:padding="10dp"
-            app:animateFrequency="800"
-            app:animationOrder="lastOneFirst"
-            app:backgroundColor="#eaeaea"
-            app:backgroundType="rounded"
-            app:dotAnimationDuration="2000"
-            app:dotAnimationType="BouncingSliding"
-            app:dotColor="#d50000"
-            app:dotSecondColor="#1565c0"
-            app:showBackground="true"/>
-
         <android.support.v4.widget.Space
             android:layout_width="0dp"
             android:layout_height="20dp"/>
@@ -128,10 +111,33 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Bouncing Sliding, lastOneFirst, 2 dot colors,\nfrequency 800, duration 2000"/>
+
+        <com.udevel.widgetlab.TypingIndicatorView
+            android:id="@+id/typing_indicator_view_bounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:padding="10dp"
+            app:animateFrequency="800"
+            app:animationOrder="lastOneFirst"
+            app:backgroundColor="#eaeaea"
+            app:backgroundType="rounded"
+            app:dotAnimationDuration="2000"
+            app:dotAnimationType="BouncingSliding"
+            app:dotColor="#d50000"
+            app:dotSecondColor="#1565c0"
+            app:showBackground="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Grow, random, 2 dot colors, frequency/duration 3000"/>
 
         <com.udevel.widgetlab.TypingIndicatorView
-            android:id="@+id/typing_indicator_view3"
+            android:id="@+id/typing_indicator_view_grow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

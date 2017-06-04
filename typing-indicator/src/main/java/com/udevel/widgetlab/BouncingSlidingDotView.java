@@ -31,13 +31,14 @@ public class BouncingSlidingDotView extends DotView {
     private AnimatorSet animatorSet;
     private int startLeft;
     private int targetLeft;
+    private int targetTop;
     private Rect clipRect = new Rect();
     private int indexToParent = Integer.MIN_VALUE;
-    private float bounceFraction = 1F;
     private long ratioAnimationTotalDuration = 100L;
     private long growDisappearAnimationDuration = 100L;
     private float radiusScale = 0F;
     private float compressRatio = 0.20F;
+    private int startTop;
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -50,7 +51,7 @@ public class BouncingSlidingDotView extends DotView {
         canvas.getClipBounds(clipRect);
         clipRect.inset(-targetLeft, 0);
         canvas.translate(-targetLeft, 0);
-        canvas.drawCircle(centerX, bounceFraction * centerY, radius * radiusScale, paint);
+        canvas.drawCircle(centerX, targetTop + centerY, radius * radiusScale, paint);
         canvas.restore();
     }
 
@@ -66,6 +67,7 @@ public class BouncingSlidingDotView extends DotView {
         ViewGroup parent = (ViewGroup) getParent();
 
         startLeft = left;
+        startTop = top;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         radius = (Math.min(getWidth(), getHeight()) / 2);
@@ -190,12 +192,12 @@ public class BouncingSlidingDotView extends DotView {
         AnimatorSet bounceSet = new AnimatorSet();
         List<Animator> bounceAnimatorList = new ArrayList<>();
 
-        ValueAnimator initialDownAnimator = ValueAnimator.ofFloat(-1F, 1F);
+        ValueAnimator initialDownAnimator = ValueAnimator.ofInt(-startTop, 0);
         initialDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
-                bounceFraction = (float) animator.getAnimatedValue();
+                targetTop = (int) animator.getAnimatedValue();
             }
         });
         initialDownAnimator.setInterpolator(new AccelerateInterpolator());
@@ -204,23 +206,23 @@ public class BouncingSlidingDotView extends DotView {
 
         for (int i = 1; i <= indexToParent; i++) {
 
-            ValueAnimator upAnimator = ValueAnimator.ofFloat(1F, -1F);
+            ValueAnimator upAnimator = ValueAnimator.ofInt(0, -startTop);
             upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
-                    bounceFraction = (float) animator.getAnimatedValue();
+                    targetTop = (int) animator.getAnimatedValue();
                 }
             });
             upAnimator.setInterpolator(new DecelerateInterpolator());
 
             bounceAnimatorList.add(upAnimator);
-            ValueAnimator downAnimator = ValueAnimator.ofFloat(-1F, 1F);
+            ValueAnimator downAnimator = ValueAnimator.ofInt(-startTop, 0);
             downAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
-                    bounceFraction = (float) animator.getAnimatedValue();
+                    targetTop = (int) animator.getAnimatedValue();
                 }
             });
             downAnimator.setInterpolator(new AccelerateInterpolator());
