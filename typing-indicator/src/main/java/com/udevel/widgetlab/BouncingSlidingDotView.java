@@ -3,14 +3,17 @@ package com.udevel.widgetlab;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -25,15 +28,15 @@ public class BouncingSlidingDotView extends DotView {
     private int centerY;
     private float radius;
     private AnimatorSet animatorSet;
-    private int parentLeft;
+    private int startLeft;
     private int targetLeft;
     private Rect clipRect = new Rect();
-    private int parentWidth;
     private int indexToParent = Integer.MIN_VALUE;
     private float bounceFraction = 1F;
     private long ratioAnimationTotalDuration = 0;
     private float radiusScale = 0F;
     private float compressRatio = 0.20F;
+    private long growDisappearAnimationDuration = 1000L;
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -43,9 +46,9 @@ public class BouncingSlidingDotView extends DotView {
     protected void onDraw(Canvas canvas) {
         paint.setColor(dotColor);
         canvas.getClipBounds(clipRect);
-        clipRect.inset(-parentLeft + targetLeft, 0);
+        clipRect.inset(-targetLeft, 0);
         canvas.save();
-        canvas.translate(-parentLeft + targetLeft, 0);
+        canvas.translate(-targetLeft, 0);
         canvas.drawCircle(centerX, bounceFraction * centerY, radius * radiusScale, paint);
         canvas.restore();
     }
@@ -61,8 +64,7 @@ public class BouncingSlidingDotView extends DotView {
         super.onLayout(changed, left, top, right, bottom);
         ViewGroup parent = (ViewGroup) getParent();
 
-        parentLeft = left - parent.getPaddingLeft() + centerX;
-        parentWidth = parent.getWidth();
+        startLeft = left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
         radius = (Math.min(getWidth(), getHeight()) / 2);
@@ -78,9 +80,50 @@ public class BouncingSlidingDotView extends DotView {
     @Override
     public void startDotAnimation() {
         stopDotAnimation();
-        animatorSet = new AnimatorSet();
 
-        ValueAnimator slidingAnimator = ValueAnimator.ofInt(0, parentLeft);
+        if (animatorSet == null) {
+            animatorSet = new AnimatorSet();
+            AnimatorSet moveAnimatorSet = getMoveAnimator(ratioAnimationTotalDuration);
+            AnimatorSet growDisappearAnimatorSet = getGrowDisappearAnimator(growDisappearAnimationDuration);
+            animatorSet.playSequentially(moveAnimatorSet, growDisappearAnimatorSet);
+            animatorSet.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    radiusScale = compressRatio;
+                    dotColor = dotSecondColor;
+                }
+            });
+        }
+        animatorSet.start();
+    }
+
+    @Override
+    public void stopDotAnimation() {
+        if (animatorSet != null) {
+            animatorSet.isStarted();
+            animatorSet.cancel();
+        }
+    }
+
+    @Override
+    public boolean isAnimating() {
+        if (animatorSet != null && animatorSet.isStarted()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    protected void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio) {
+        this.compressRatio = compressRatio;
+    }
+
+    @NonNull
+    private AnimatorSet getMoveAnimator(long ratioAnimationTotalDuration) {
+        AnimatorSet moveAnimatorSet = new AnimatorSet();
+
+        ValueAnimator slidingAnimator = ValueAnimator.ofInt(startLeft, 0);
         slidingAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
@@ -91,7 +134,59 @@ public class BouncingSlidingDotView extends DotView {
         slidingAnimator.setInterpolator(new LinearInterpolator());
         slidingAnimator.setDuration(ratioAnimationTotalDuration);
 
+        AnimatorSet bounceSet = getBounceAnimatorSet(ratioAnimationTotalDuration);
 
+        moveAnimatorSet.playTogether(slidingAnimator, bounceSet);
+        return moveAnimatorSet;
+    }
+
+    @NonNull
+    private AnimatorSet getGrowDisappearAnimator(long growDisappearAnimationDuration) {
+
+        AnimatorSet growDisappearAnimatorSet = new AnimatorSet();
+
+        ValueAnimator growAnimator = ValueAnimator.ofFloat(compressRatio, 1F);
+        growAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                radiusScale = (float) animator.getAnimatedValue();
+                invalidate();
+            }
+        });
+        growAnimator.setInterpolator(new AccelerateInterpolator());
+        growAnimator.setDuration(growDisappearAnimationDuration);
+
+
+       /* ValueAnimator disappearAnimator = ValueAnimator.ofFloat(1F, compressRatio);
+        disappearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                radiusScale = (float) animator.getAnimatedValue();
+                invalidate();
+            }
+        });
+        disappearAnimator.setInterpolator(new LinearInterpolator());
+        disappearAnimator.setDuration(growDisappearAnimationDuration);*/
+
+        ValueAnimator fadeAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), dotSecondColor, Color.TRANSPARENT);
+        fadeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                dotColor = (int) animator.getAnimatedValue();
+                invalidate();
+            }
+        });
+
+
+        fadeAnimator.setDuration(growDisappearAnimationDuration);
+        fadeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        growDisappearAnimatorSet.playTogether(growAnimator, fadeAnimator);
+        return growDisappearAnimatorSet;
+    }
+
+    @NonNull
+    private AnimatorSet getBounceAnimatorSet(long bounceDuration) {
         AnimatorSet bounceSet = new AnimatorSet();
         List<Animator> bounceAnimatorList = new ArrayList<>();
 
@@ -103,6 +198,8 @@ public class BouncingSlidingDotView extends DotView {
                 bounceFraction = (float) animator.getAnimatedValue();
             }
         });
+        initialDownAnimator.setInterpolator(new AccelerateInterpolator());
+
         bounceAnimatorList.add(initialDownAnimator);
 
         for (int i = 1; i <= indexToParent; i++) {
@@ -133,46 +230,10 @@ public class BouncingSlidingDotView extends DotView {
 
         int size = bounceAnimatorList.size();
         for (Animator animator : bounceAnimatorList) {
-            animator.setDuration(ratioAnimationTotalDuration / size);
+            animator.setDuration(bounceDuration / size);
         }
         bounceSet.playSequentially(bounceAnimatorList);
-        animatorSet.playTogether(slidingAnimator, bounceSet);
-        animatorSet.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                radiusScale = 1F;
-                dotColor = dotFirstColor;
-            }
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-                radiusScale = compressRatio;
-                dotColor = dotSecondColor;
-            }
-        });
-        animatorSet.start();
-    }
-
-    @Override
-    public void stopDotAnimation() {
-        if (animatorSet != null) {
-            animatorSet.isStarted();
-            animatorSet.cancel();
-        }
-    }
-
-    @Override
-    public boolean isAnimating() {
-        if (animatorSet != null && animatorSet.isStarted()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    protected void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio) {
-        this.compressRatio = compressRatio;
+        return bounceSet;
     }
 
     private int findIndexToParent(@NonNull ViewGroup parent) {

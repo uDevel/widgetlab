@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:layout_margin="8dp"
             android:padding="10dp"
-            app:animateFrequency="2000"
+            app:animateFrequency="800"
             app:animationOrder="lastOneFirst"
             app:backgroundColor="#eaeaea"
             app:backgroundType="rounded"
