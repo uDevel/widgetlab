@@ -2,7 +2,7 @@
 
 # Typing indicator or wait progress animation.
 
-<img src="https://media.giphy.com/media/CSIyqIAxVFzhK/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/kPZRmEfmctbck/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/CSwfaFSSBvL6U/giphy.gif" width="30%" />
+<img src="./github_assets/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/kPZRmEfmctbck/giphy.gif" width="30%" /> <img src="https://media.giphy.com/media/CSwfaFSSBvL6U/giphy.gif" width="30%" />
 
 
 ## Video of Sample app:
@@ -16,7 +16,7 @@ Just put it in your xml layout.  It can't get any easier than that.
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 ```
-This gives you the default.  There are many optional [configurations](https://github.com/uDevel/widgetlab/wiki/Configurations) available.  This is recommeneded if you want to have unique animation; there are examples that you can modify from.
+This gives you the default.  There are many optional [configurations](https://github.com/uDevel/widgetlab/wiki/Configurations) available.  This is recommended if you want to have unique animation; there are examples that you can modify from.
 
 
 ## Gradle:
