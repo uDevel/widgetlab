@@ -25,7 +25,7 @@
             app:animationOrder="lastOneFirst"
             app:backgroundColor="#eaeaea"
             app:backgroundType="rounded"
-            app:dotAnimationDuration="1000"
+            app:dotAnimationDuration="2000"
             app:dotAnimationType="BouncingSliding"
             app:dotColor="#d50000"
             app:dotSecondColor="#1565c0"

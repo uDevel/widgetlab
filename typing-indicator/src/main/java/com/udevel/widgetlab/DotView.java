@@ -14,7 +14,7 @@ abstract class DotView extends View {
     @ColorInt
     protected int dotFirstColor = Color.RED;
     protected int dotSecondColor = Color.BLUE;
-    protected int dotColor = dotFirstColor;
+    protected int dotColor = Color.TRANSPARENT;
     protected long animationTotalDuration = 600L;
 
     public DotView(Context context) {

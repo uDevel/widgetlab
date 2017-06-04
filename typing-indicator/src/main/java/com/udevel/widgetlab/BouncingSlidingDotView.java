@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.view.ViewGroup;
@@ -33,10 +34,10 @@ public class BouncingSlidingDotView extends DotView {
     private Rect clipRect = new Rect();
     private int indexToParent = Integer.MIN_VALUE;
     private float bounceFraction = 1F;
-    private long ratioAnimationTotalDuration = 0;
+    private long ratioAnimationTotalDuration = 100L;
+    private long growDisappearAnimationDuration = 100L;
     private float radiusScale = 0F;
     private float compressRatio = 0.20F;
-    private long growDisappearAnimationDuration = 1000L;
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -45,9 +46,9 @@ public class BouncingSlidingDotView extends DotView {
     @Override
     protected void onDraw(Canvas canvas) {
         paint.setColor(dotColor);
+        canvas.save();
         canvas.getClipBounds(clipRect);
         clipRect.inset(-targetLeft, 0);
-        canvas.save();
         canvas.translate(-targetLeft, 0);
         canvas.drawCircle(centerX, bounceFraction * centerY, radius * radiusScale, paint);
         canvas.restore();
@@ -69,7 +70,18 @@ public class BouncingSlidingDotView extends DotView {
         centerY = getHeight() / 2;
         radius = (Math.min(getWidth(), getHeight()) / 2);
 
-        ratioAnimationTotalDuration = (long) (animationTotalDuration * (findIndexToParent(parent) + 1F) / parent.getChildCount());
+        ratioAnimationTotalDuration = (long) ((animationTotalDuration / 2) * (findIndexToParent(parent) + 1F) / parent.getChildCount());
+    }
+
+    @Override
+    public void setColor(@ColorInt int color) {
+        super.setColor(color);
+    }
+
+    @Override
+    public void setAnimationDuration(long duration) {
+        super.setAnimationDuration(duration);
+        growDisappearAnimationDuration = animationTotalDuration / 2;
     }
 
     @Override
@@ -155,18 +167,6 @@ public class BouncingSlidingDotView extends DotView {
         });
         growAnimator.setInterpolator(new AccelerateInterpolator());
         growAnimator.setDuration(growDisappearAnimationDuration);
-
-
-       /* ValueAnimator disappearAnimator = ValueAnimator.ofFloat(1F, compressRatio);
-        disappearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                radiusScale = (float) animator.getAnimatedValue();
-                invalidate();
-            }
-        });
-        disappearAnimator.setInterpolator(new LinearInterpolator());
-        disappearAnimator.setDuration(growDisappearAnimationDuration);*/
 
         ValueAnimator fadeAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), dotSecondColor, Color.TRANSPARENT);
         fadeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
