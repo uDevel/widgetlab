@@ -20,7 +20,7 @@ Just put it in your xml layout.  It can't get any easier than that.
 This gives you the default.  There are many optional [configurations](https://github.com/uDevel/widgetlab/wiki/Configurations) available.  This is recommended if you want to have unique animation; there are examples that you can modify from.
 
 Ex. BouncingSliding animation type:    
-<img src="./github_assets/bouncing_sliding.gif" width="30%" />
+<img src="./github_assets/bouncing_sliding.gif" width="8%" />
 
 ## Gradle:
 Add to your project level build.gradle's allprojects
