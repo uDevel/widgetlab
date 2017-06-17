@@ -67,7 +67,6 @@ public class TypingIndicatorView extends LinearLayout {
     private Runnable dotAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG, "run() called");
             int dotsCount = dotViewList.size();
 
             int animateDotIndex = 0;
@@ -156,7 +155,9 @@ public class TypingIndicatorView extends LinearLayout {
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
         if (hasWindowFocus) {
-            startDotAnimation();
+            if (getVisibility() == VISIBLE) {
+                startDotAnimation();
+            }
         } else {
             stopDotAnimation();
         }
@@ -173,6 +174,20 @@ public class TypingIndicatorView extends LinearLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (getVisibility() == VISIBLE) {
+            startDotAnimation();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        stopDotAnimation();
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         int radius = Math.min(getWidth(), getHeight()) / 2;
         switch (backgroundType) {
@@ -185,12 +200,6 @@ public class TypingIndicatorView extends LinearLayout {
                 canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
                 break;
         }
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        stopDotAnimation();
     }
 
     @UiThread
