@@ -114,7 +114,9 @@ public class TypingIndicatorView extends LinearLayout {
                 delayMillis = animateFrequency;
             }
 
-            handler.postDelayed(dotAnimationRunnable, delayMillis);
+            if (isAnimationStarted) {
+                handler.postDelayed(dotAnimationRunnable, delayMillis);
+            }
         }
     };
 
@@ -206,6 +208,7 @@ public class TypingIndicatorView extends LinearLayout {
     public void stopDotAnimation() {
         isAnimationStarted = false;
         handler.removeCallbacks(dotAnimationRunnable);
+
     }
 
     @UiThread
