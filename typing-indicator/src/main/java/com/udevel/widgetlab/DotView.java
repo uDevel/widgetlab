@@ -2,8 +2,10 @@ package com.udevel.widgetlab;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 /**
@@ -13,11 +15,16 @@ import android.view.View;
 abstract class DotView extends View {
     @ColorInt
     protected int dotFirstColor = Color.RED;
+
+    @ColorInt
     protected int dotSecondColor = Color.BLUE;
+
+    @ColorInt
     protected int dotColor = Color.TRANSPARENT;
+
     protected long animationTotalDuration = 600L;
 
-    public DotView(Context context) {
+    public DotView(@NonNull Context context) {
         super(context);
         init();
     }
@@ -41,6 +48,7 @@ abstract class DotView extends View {
 
     protected abstract void stopDotAnimation();
 
+    @CheckResult
     protected abstract boolean isAnimating();
 
     protected abstract void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio);

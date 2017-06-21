@@ -10,23 +10,32 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.FloatRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WinkDotView extends DotView {
-    private static final String TAG = WinkDotView.class.getSimpleName();
+    @FloatRange(from = 0, to = 1F)
     private static final float RATIO_OF_HORIZONTAL_EXPANSION = 0.33F;
-    private Paint paint = new Paint();
+
     private int centerX;
     private int centerY;
+
     private float radius;
     private float scaleY = 1F;
     private float scaleX = 1F;
     private float minScaleY = 0.6F;
 
-    private RectF ovalRectF = new RectF();
+    private Paint paint;
+    private RectF ovalRectF;
+
+    @Nullable
     private AnimatorSet animatorSet;
 
-    public WinkDotView(Context context) {
+    public WinkDotView(@NonNull Context context) {
         super(context);
     }
 
@@ -41,21 +50,24 @@ public class WinkDotView extends DotView {
         super.onLayout(changed, left, top, right, bottom);
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2) / (1 + ((1 - minScaleY) / 2F));
+        radius = Math.min(centerX, centerY) / (1 + ((1 - minScaleY) / 2F));
         updateOvalRecF();
     }
 
     @Override
     protected void init() {
         paint = new Paint();
+        ovalRectF = new RectF();
     }
 
     @Override
     public void startDotAnimation() {
         stopDotAnimation();
 
+        // TODO: Fix bug for when the color of the dots change, we need to reset the AnimatorSet
         if (animatorSet == null) {
             animatorSet = new AnimatorSet();
+            List<Animator> animations = new ArrayList<>(2);
             ValueAnimator winkAnimator = ValueAnimator.ofFloat(1F, minScaleY);
             winkAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -71,6 +83,7 @@ public class WinkDotView extends DotView {
             winkAnimator.setInterpolator(new FastOutSlowInInterpolator());
             winkAnimator.setRepeatCount(1);
             winkAnimator.setRepeatMode(ValueAnimator.REVERSE);
+            animations.add(winkAnimator);
 
             if (dotFirstColor != dotSecondColor) {
                 ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), dotFirstColor, dotSecondColor);
@@ -85,11 +98,10 @@ public class WinkDotView extends DotView {
                 colorAnimator.setInterpolator(new FastOutSlowInInterpolator());
                 colorAnimator.setRepeatCount(1);
                 colorAnimator.setRepeatMode(ValueAnimator.REVERSE);
-                animatorSet.playTogether(winkAnimator, colorAnimator);
-            } else {
-                animatorSet.playTogether(winkAnimator);
+                animations.add(colorAnimator);
             }
 
+            animatorSet.playTogether(animations);
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -114,10 +126,7 @@ public class WinkDotView extends DotView {
 
     @Override
     public boolean isAnimating() {
-        if (animatorSet != null) {
-            return animatorSet.isStarted();
-        }
-        return false;
+        return animatorSet != null && animatorSet.isStarted();
     }
 
     public void setMaxCompressRatio(@FloatRange(from = 0.0, to = 1.0) float compressRatio) {
@@ -125,9 +134,11 @@ public class WinkDotView extends DotView {
     }
 
     private void updateOvalRecF() {
-        ovalRectF.left = centerX - (radius * scaleX);
+        float modifiedRadiusX = (radius * scaleX);
+        ovalRectF.left = centerX - modifiedRadiusX;
+        ovalRectF.right = centerX + modifiedRadiusX;
+
         ovalRectF.top = centerY - ((2 * radius * scaleY) - radius);
-        ovalRectF.right = centerX + (radius * scaleX);
         ovalRectF.bottom = centerY + radius;
     }
 }
