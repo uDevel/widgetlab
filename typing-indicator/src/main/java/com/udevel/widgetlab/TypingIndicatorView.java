@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Handler;
+import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -18,6 +21,12 @@ import android.widget.LinearLayout;
 import com.udevel.widgetlab.definitions.AnimationType;
 import com.udevel.widgetlab.definitions.BackgroundType;
 import com.udevel.widgetlab.definitions.Order;
+import com.udevel.widgetlab.sequences.CircularSequence;
+import com.udevel.widgetlab.sequences.InSequence;
+import com.udevel.widgetlab.sequences.RandomNoRepetitionSequence;
+import com.udevel.widgetlab.sequences.RandomSequence;
+import com.udevel.widgetlab.sequences.ReverseSequence;
+import com.udevel.widgetlab.sequences.SequenceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,86 +47,62 @@ public class TypingIndicatorView extends LinearLayout {
     private static final int ANIMATE_ORDER_DEF_VALUE = Order.RANDOM;
     private static final int ANIMATE_FREQUENCY_DEF_VALUE = 1000;
 
-    private Handler handler = new Handler();
-    private List<DotView> dotViewList = new ArrayList<>();
+    @IntRange(from = 1)
     private int numOfDots;
-    private Random random = new Random();
+
     private boolean isAnimationStarted;
+
+    @IntRange(from = 0)
     private int dotHorizontalSpacing;
+
+    @IntRange(from = 1)
     private int dotSize;
+
+    @FloatRange(from = 0F, to = 1F)
     private float dotMaxCompressRatio;
-    private Paint backgroundPaint;
+
     private boolean isShowBackground;
 
     @BackgroundType
     private int backgroundType;
+
+    @ColorInt
     private int backgroundColor;
 
     @AnimationType
     private int dotAnimationType;
+
+    @ColorInt
     private int dotColor;
+
+    @ColorInt
     private int dotSecondColor;
+
+    @IntRange(from = 1)
     private int dotAnimationDuration;
+
+    @IntRange(from = 1)
     private int animateFrequency;
 
-    @Order
-    private int animationOrder;
-    private int nextAnimateDotIndex = 0;
-    private boolean animateDotIndexDirectionPositive = true;
 
-    private Runnable dotAnimationRunnable = new Runnable() {
+    private SequenceGenerator sequenceGenerator = new RandomSequence();
+    private int currentAnimateDotIndex = 0;
+
+    private Paint backgroundPaint;
+    private Handler handler = new Handler();
+    private Random random = new Random();
+    private List<DotView> dotViewList = new ArrayList<>();
+
+    private final Runnable dotAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            int dotsCount = dotViewList.size();
-
-            int animateDotIndex;
-            switch (animationOrder) {
-                case Order.SEQUENCE:
-                    animateDotIndex = nextAnimateDotIndex;
-                    nextAnimateDotIndex++;
-                    if (nextAnimateDotIndex >= dotsCount) {
-                        nextAnimateDotIndex = 0;
-                    }
-                    break;
-                case Order.LAST_FIRST:
-                    animateDotIndex = dotsCount - 1 - nextAnimateDotIndex;
-                    nextAnimateDotIndex++;
-                    if (nextAnimateDotIndex >= dotsCount) {
-                        nextAnimateDotIndex = 0;
-                    }
-                    break;
-                case Order.CIRCULAR:
-                    animateDotIndex = nextAnimateDotIndex;
-
-                    if (animateDotIndexDirectionPositive) {
-                        nextAnimateDotIndex++;
-                        if (nextAnimateDotIndex >= dotsCount - 1) {
-                            animateDotIndexDirectionPositive = false;
-                        }
-                    } else {
-                        nextAnimateDotIndex--;
-                        if (nextAnimateDotIndex <= 0) {
-                            animateDotIndexDirectionPositive = true;
-                        }
-                    }
-                    break;
-                case Order.RANDOM:
-                default:
-                    animateDotIndex = random.nextInt(dotsCount);
-                    break;
-            }
-
-            dotViewList.get(animateDotIndex).startDotAnimation();
-            long delayMillis;
-            if (animateFrequency < 0L) {
-                delayMillis = (long) (500L + (2000L * random.nextFloat()));
-            } else {
-                delayMillis = animateFrequency;
-            }
-
+            int nextAnimateDotIndex = sequenceGenerator.nextIndex(currentAnimateDotIndex, numOfDots);
+            dotViewList.get(nextAnimateDotIndex).startDotAnimation();
+            long delayMillis = (animateFrequency < 0L) ? (long) (500L + (2000L * random.nextFloat())) : animateFrequency;
             if (isAnimationStarted) {
                 handler.postDelayed(dotAnimationRunnable, delayMillis);
             }
+            currentAnimateDotIndex = nextAnimateDotIndex;
         }
     };
 
@@ -229,6 +214,7 @@ public class TypingIndicatorView extends LinearLayout {
 
     private void parseAttributes(@NonNull Context context, @Nullable AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TypingIndicatorView, 0, 0);
+        int animationOrder;
 
         try {
             dotSize = a.getDimensionPixelOffset(R.styleable.TypingIndicatorView_dotSize, DOT_SIZE_DEF_VALUE);
@@ -252,9 +238,11 @@ public class TypingIndicatorView extends LinearLayout {
             throw new IllegalArgumentException("dotMaxCompressRatio must be between 0% and 100%");
         }
 
-        if (dotAnimationType == AnimationType.DISAPPEAR && animationOrder != Order.SEQUENCE) {
+        if (dotAnimationType == AnimationType.DISAPPEAR) {
             animationOrder = Order.SEQUENCE;
         }
+
+        setAnimationOrder(animationOrder);
     }
 
     private void init() {
@@ -267,25 +255,7 @@ public class TypingIndicatorView extends LinearLayout {
         }
 
         for (int i = 0; i < numOfDots; i++) {
-            DotView dotView;
-            switch (dotAnimationType) {
-                case AnimationType.BOUNCING_SLIDING:
-                    dotView = new BouncingSlidingDotView(getContext());
-                    break;
-                case AnimationType.SLIDING:
-                    dotView = new SlidingDotView(getContext());
-                    break;
-                case AnimationType.WINK:
-                    dotView = new WinkDotView(getContext());
-                    break;
-                case AnimationType.DISAPPEAR:
-                    dotView = new DisappearDotView(getContext());
-                    break;
-                case AnimationType.GROW:
-                default:
-                    dotView = new GrowDotView(getContext());
-                    break;
-            }
+            DotView dotView = createDotView(dotAnimationType);
             dotView.setAnimationDuration(dotAnimationDuration);
             dotView.setMaxCompressRatio(dotMaxCompressRatio);
             dotView.setColor(dotColor);
@@ -296,6 +266,38 @@ public class TypingIndicatorView extends LinearLayout {
 
             addView(dotView, layoutParams);
             dotViewList.add(dotView);
+        }
+    }
+
+    private DotView createDotView(@AnimationType int dotAnimationType) {
+        Context context = getContext();
+        switch (dotAnimationType) {
+            case AnimationType.BOUNCING_SLIDING:
+                return new BouncingSlidingDotView(context);
+            case AnimationType.SLIDING:
+                return new SlidingDotView(context);
+            case AnimationType.WINK:
+                return new WinkDotView(context);
+            case AnimationType.DISAPPEAR:
+                return new DisappearDotView(context);
+            case AnimationType.GROW:
+            default:
+                return new GrowDotView(context);
+        }
+    }
+
+    public void setAnimationOrder(@Order int animationOrder) {
+        switch (animationOrder) {
+            case Order.CIRCULAR:
+                sequenceGenerator = new CircularSequence();
+            case Order.LAST_FIRST:
+                sequenceGenerator = new ReverseSequence();
+            case Order.RANDOM_NO_REPETITION:
+                sequenceGenerator = new RandomNoRepetitionSequence();
+            case Order.SEQUENCE:
+                sequenceGenerator = new InSequence();
+            case Order.RANDOM:
+                sequenceGenerator = new RandomSequence();
         }
     }
 }
