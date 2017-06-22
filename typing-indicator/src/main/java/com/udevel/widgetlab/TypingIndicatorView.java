@@ -15,34 +15,29 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.udevel.widgetlab.definitions.AnimationType;
+import com.udevel.widgetlab.definitions.BackgroundType;
+import com.udevel.widgetlab.definitions.Order;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class TypingIndicatorView extends LinearLayout {
-    public static final int ANIMATE_ORDER_RANDOM = 0;
-    public static final int ANIMATE_ORDER_SEQUENCE = 1;
-    public static final int ANIMATE_ORDER_CIRCULAR = 2;
-    public static final int ANIMATE_ORDER_LAST_FIRST = 3;
-    public static final int BACKGROUND_TYPE_ROUNDED = 1;
-    public static final int BACKGROUND_TYPE_SQUARE = 0;
-    public static final int DOT_ANIMATION_GROW = 0;
-    public static final int DOT_ANIMATION_WINK = 1;
-    public static final int DOT_ANIMATION_DISAPPEAR = 2;
-    public static final int DOT_ANIMATION_SLIDING = 3;
-    public static final int DOT_ANIMATION_BOUNCING_SLIDING = 4;
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
-    private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
+
+    private static final int BACKGROUND_TYPE_DEF_VALUE = BackgroundType.SQUARE;
+    private static final int BACKGROUND_COLOR_DEF_VALUE = Color.LTGRAY;
+    private static final int DOT_ANIMATION_TYPE_DEF_VALUE = AnimationType.GROW;
     private static final int DOT_COUNT_DEF_VALUE = 3;
     private static final int DOT_SIZE_DEF_VALUE = 24;
     private static final int DOT_COLOR_DEF_VALUE = Color.LTGRAY;
     private static final float DOT_MAX_COMPRESS_RATIO_DEF_VALUE = 0.5F;
     private static final int DOT_ANIMATION_DURATION_DEF_VALUE = 600;
-    private static final int DOT_ANIMATION_TYPE_DEF_VALUE = DOT_ANIMATION_GROW;
     private static final int DOT_HORIZONTAL_SPACING_DEF_VALUE = 20;
-    private static final int BACKGROUND_COLOR_DEF_VALUE = Color.LTGRAY;
-    private static final int ANIMATE_ORDER_DEF_VALUE = ANIMATE_ORDER_RANDOM;
+    private static final int ANIMATE_ORDER_DEF_VALUE = Order.RANDOM;
     private static final int ANIMATE_FREQUENCY_DEF_VALUE = 1000;
+
     private Handler handler = new Handler();
     private List<DotView> dotViewList = new ArrayList<>();
     private int numOfDots;
@@ -53,13 +48,19 @@ public class TypingIndicatorView extends LinearLayout {
     private float dotMaxCompressRatio;
     private Paint backgroundPaint;
     private boolean isShowBackground;
+
+    @BackgroundType
     private int backgroundType;
     private int backgroundColor;
+
+    @AnimationType
+    private int dotAnimationType;
     private int dotColor;
     private int dotSecondColor;
     private int dotAnimationDuration;
-    private int dotAnimationType;
     private int animateFrequency;
+
+    @Order
     private int animationOrder;
     private int nextAnimateDotIndex = 0;
     private boolean animateDotIndexDirectionPositive = true;
@@ -69,26 +70,23 @@ public class TypingIndicatorView extends LinearLayout {
         public void run() {
             int dotsCount = dotViewList.size();
 
-            int animateDotIndex = 0;
+            int animateDotIndex;
             switch (animationOrder) {
-                case ANIMATE_ORDER_RANDOM:
-                    animateDotIndex = random.nextInt(dotsCount);
-                    break;
-                case ANIMATE_ORDER_SEQUENCE:
+                case Order.SEQUENCE:
                     animateDotIndex = nextAnimateDotIndex;
                     nextAnimateDotIndex++;
                     if (nextAnimateDotIndex >= dotsCount) {
                         nextAnimateDotIndex = 0;
                     }
                     break;
-                case ANIMATE_ORDER_LAST_FIRST:
+                case Order.LAST_FIRST:
                     animateDotIndex = dotsCount - 1 - nextAnimateDotIndex;
                     nextAnimateDotIndex++;
                     if (nextAnimateDotIndex >= dotsCount) {
                         nextAnimateDotIndex = 0;
                     }
                     break;
-                case ANIMATE_ORDER_CIRCULAR:
+                case Order.CIRCULAR:
                     animateDotIndex = nextAnimateDotIndex;
 
                     if (animateDotIndexDirectionPositive) {
@@ -103,7 +101,10 @@ public class TypingIndicatorView extends LinearLayout {
                         }
                     }
                     break;
-
+                case Order.RANDOM:
+                default:
+                    animateDotIndex = random.nextInt(dotsCount);
+                    break;
             }
 
             dotViewList.get(animateDotIndex).startDotAnimation();
@@ -193,12 +194,13 @@ public class TypingIndicatorView extends LinearLayout {
     protected void onDraw(Canvas canvas) {
         int radius = Math.min(getWidth(), getHeight()) / 2;
         switch (backgroundType) {
-            case BACKGROUND_TYPE_ROUNDED:
+            case BackgroundType.ROUNDED:
                 canvas.drawCircle(radius, radius, radius, backgroundPaint);
                 canvas.drawCircle(getWidth() - radius, radius, radius, backgroundPaint);
                 canvas.drawRect(radius, 0, getWidth() - radius, getHeight(), backgroundPaint);
                 break;
-            case BACKGROUND_TYPE_SQUARE:
+            case BackgroundType.SQUARE:
+            default:
                 canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
                 break;
         }
@@ -250,8 +252,8 @@ public class TypingIndicatorView extends LinearLayout {
             throw new IllegalArgumentException("dotMaxCompressRatio must be between 0% and 100%");
         }
 
-        if (dotAnimationType == DOT_ANIMATION_DISAPPEAR && animationOrder != ANIMATE_ORDER_SEQUENCE) {
-            animationOrder = ANIMATE_ORDER_SEQUENCE;
+        if (dotAnimationType == AnimationType.DISAPPEAR && animationOrder != Order.SEQUENCE) {
+            animationOrder = Order.SEQUENCE;
         }
     }
 
@@ -267,19 +269,19 @@ public class TypingIndicatorView extends LinearLayout {
         for (int i = 0; i < numOfDots; i++) {
             DotView dotView;
             switch (dotAnimationType) {
-                case DOT_ANIMATION_BOUNCING_SLIDING:
+                case AnimationType.BOUNCING_SLIDING:
                     dotView = new BouncingSlidingDotView(getContext());
                     break;
-                case DOT_ANIMATION_SLIDING:
+                case AnimationType.SLIDING:
                     dotView = new SlidingDotView(getContext());
                     break;
-                case DOT_ANIMATION_WINK:
+                case AnimationType.WINK:
                     dotView = new WinkDotView(getContext());
                     break;
-                case DOT_ANIMATION_DISAPPEAR:
+                case AnimationType.DISAPPEAR:
                     dotView = new DisappearDotView(getContext());
                     break;
-                case DOT_ANIMATION_GROW:
+                case AnimationType.GROW:
                 default:
                     dotView = new GrowDotView(getContext());
                     break;
