@@ -23,22 +23,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BouncingSlidingDotView extends DotView {
-    private static final String TAG = BouncingSlidingDotView.class.getSimpleName();
-    private Paint paint = new Paint();
+    private final Paint paint = new Paint();
+    private final Rect clipRect = new Rect();
+
     private int centerX;
     private int centerY;
     private float radius;
-    private AnimatorSet animatorSet;
     private int startLeft;
     private int targetLeft;
     private int targetTop;
-    private Rect clipRect = new Rect();
     private int indexToParent = Integer.MIN_VALUE;
     private long ratioAnimationTotalDuration = 100L;
     private long growDisappearAnimationDuration = 100L;
     private float radiusScale = 0F;
     private float compressRatio = 0.20F;
     private int startTop;
+
+    private AnimatorSet animatorSet;
 
     public BouncingSlidingDotView(Context context) {
         super(context);
@@ -70,7 +71,7 @@ public class BouncingSlidingDotView extends DotView {
         startTop = top;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2);
+        radius = Math.min(centerX, centerY);
 
         ratioAnimationTotalDuration = (long) ((animationTotalDuration / 2) * (findIndexToParent(parent) + 1F) / parent.getChildCount());
     }
@@ -88,13 +89,14 @@ public class BouncingSlidingDotView extends DotView {
 
     @Override
     protected void init() {
-
+        // nothing to do here
     }
 
     @Override
     public void startDotAnimation() {
         stopDotAnimation();
 
+        // TODO: Fix bug for when the color of the dots change, we need to reset the AnimatorSet
         if (animatorSet == null) {
             animatorSet = new AnimatorSet();
             AnimatorSet moveAnimatorSet = getMoveAnimator(ratioAnimationTotalDuration);
@@ -113,19 +115,14 @@ public class BouncingSlidingDotView extends DotView {
 
     @Override
     public void stopDotAnimation() {
-        if (animatorSet != null) {
-            animatorSet.isStarted();
+        if (animatorSet != null && animatorSet.isStarted()) {
             animatorSet.cancel();
         }
     }
 
     @Override
     public boolean isAnimating() {
-        if (animatorSet != null && animatorSet.isStarted()) {
-            return true;
-        }
-
-        return false;
+        return (animatorSet != null && animatorSet.isStarted());
     }
 
     @Override
@@ -156,7 +153,6 @@ public class BouncingSlidingDotView extends DotView {
 
     @NonNull
     private AnimatorSet getGrowDisappearAnimator(long growDisappearAnimationDuration) {
-
         AnimatorSet growDisappearAnimatorSet = new AnimatorSet();
 
         ValueAnimator growAnimator = ValueAnimator.ofFloat(compressRatio, 1F);
@@ -178,7 +174,6 @@ public class BouncingSlidingDotView extends DotView {
                 invalidate();
             }
         });
-
 
         fadeAnimator.setDuration(growDisappearAnimationDuration);
         fadeAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -204,8 +199,8 @@ public class BouncingSlidingDotView extends DotView {
 
         bounceAnimatorList.add(initialDownAnimator);
 
-        for (int i = 1; i <= indexToParent; i++) {
-
+        int i = indexToParent;
+        while (i-- > 0) {
             ValueAnimator upAnimator = ValueAnimator.ofInt(0, -startTop);
             upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -239,11 +234,13 @@ public class BouncingSlidingDotView extends DotView {
     }
 
     private int findIndexToParent(@NonNull ViewGroup parent) {
-        for (int i = 0; i < parent.getChildCount(); i++) {
+        int childCount = parent.getChildCount();
+        for (int i = 0; i < childCount; i++) {
             if (parent.getChildAt(i) == this) {
                 return i;
             }
         }
+
         return -1;
     }
 }

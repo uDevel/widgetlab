@@ -84,14 +84,13 @@ public class TypingIndicatorView extends LinearLayout {
     @IntRange(from = 1)
     private int animateFrequency;
 
-
-    private SequenceGenerator sequenceGenerator = new RandomSequence();
+    private SequenceGenerator sequenceGenerator;
     private int currentAnimateDotIndex = 0;
 
     private Paint backgroundPaint;
-    private Handler handler = new Handler();
-    private Random random = new Random();
-    private List<DotView> dotViewList = new ArrayList<>();
+    private final Handler handler = new Handler();
+    private final Random random = new Random();
+    private final List<DotView> dotViewList = new ArrayList<>();
 
     private final Runnable dotAnimationRunnable = new Runnable() {
         @Override
@@ -254,16 +253,11 @@ public class TypingIndicatorView extends LinearLayout {
             backgroundPaint.setColor(backgroundColor);
         }
 
+        int halfHorizontalSpacing = dotHorizontalSpacing / 2;
         for (int i = 0; i < numOfDots; i++) {
             DotView dotView = createDotView(dotAnimationType);
-            dotView.setAnimationDuration(dotAnimationDuration);
-            dotView.setMaxCompressRatio(dotMaxCompressRatio);
-            dotView.setColor(dotColor);
-            dotView.setSecondColor(dotSecondColor);
             LinearLayout.LayoutParams layoutParams = new LayoutParams(dotSize, dotSize);
-            int halfHorizontalSpacing = dotHorizontalSpacing / 2;
             layoutParams.setMargins(halfHorizontalSpacing, 0, halfHorizontalSpacing, 0);
-
             addView(dotView, layoutParams);
             dotViewList.add(dotView);
         }
@@ -271,19 +265,31 @@ public class TypingIndicatorView extends LinearLayout {
 
     private DotView createDotView(@AnimationType int dotAnimationType) {
         Context context = getContext();
+        DotView dotView;
         switch (dotAnimationType) {
             case AnimationType.BOUNCING_SLIDING:
-                return new BouncingSlidingDotView(context);
+                dotView = new BouncingSlidingDotView(context);
+                break;
             case AnimationType.SLIDING:
-                return new SlidingDotView(context);
+                dotView = new SlidingDotView(context);
+                break;
             case AnimationType.WINK:
-                return new WinkDotView(context);
+                dotView = new WinkDotView(context);
+                break;
             case AnimationType.DISAPPEAR:
-                return new DisappearDotView(context);
+                dotView = new DisappearDotView(context);
+                break;
             case AnimationType.GROW:
             default:
-                return new GrowDotView(context);
+                dotView = new GrowDotView(context);
+                break;
         }
+
+        dotView.setAnimationDuration(dotAnimationDuration);
+        dotView.setMaxCompressRatio(dotMaxCompressRatio);
+        dotView.setColor(dotColor);
+        dotView.setSecondColor(dotSecondColor);
+        return dotView;
     }
 
     public void setAnimationOrder(@Order int animationOrder) {

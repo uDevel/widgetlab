@@ -16,19 +16,20 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 public class SlidingDotView extends DotView {
-    private static final String TAG = SlidingDotView.class.getSimpleName();
-    private Paint paint = new Paint();
+    private final Paint paint = new Paint();
+    private final Rect clipRect = new Rect();
+
     private int centerX;
     private int centerY;
     private float radius;
     private boolean isAnimatingDisappear = true;
-    private AnimatorSet animatorDisappearSet;
-    private AnimatorSet animatorAppearSet;
     private int parentLeft;
     private int parentRight;
     private int targetLeft;
-    private Rect clipRect = new Rect();
     private int parentWidth;
+
+    private AnimatorSet animatorDisappearSet;
+    private AnimatorSet animatorAppearSet;
 
     public SlidingDotView(Context context) {
         super(context);
@@ -53,19 +54,19 @@ public class SlidingDotView extends DotView {
         parentRight = parentWidth - left;
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2);
+        radius = Math.min(centerX, centerY);
     }
 
     @Override
     protected void init() {
-        paint = new Paint();
+        // not needed
     }
 
     @Override
     public void startDotAnimation() {
-
-        float ratioDxLeft = (parentLeft - getWidth() / 2F) / (parentWidth / 2F);
-        float ratioDxRight = (parentRight - getWidth() / 2F) / (parentWidth / 2F);
+        int width = getWidth();
+        float ratioDxLeft = (parentLeft - width / 2F) / (parentWidth / 2F);
+        float ratioDxRight = (parentRight - width / 2F) / (parentWidth / 2F);
 
         stopDotAnimation();
         if (isAnimatingDisappear) {
@@ -106,7 +107,7 @@ public class SlidingDotView extends DotView {
             isAnimatingDisappear = true;
             if (animatorDisappearSet == null) {
                 animatorDisappearSet = new AnimatorSet();
-                ValueAnimator disappearAnimator = ValueAnimator.ofInt(parentLeft, parentLeft + parentRight + getWidth());
+                ValueAnimator disappearAnimator = ValueAnimator.ofInt(parentLeft, parentLeft + parentRight + width);
                 disappearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animator) {
@@ -125,27 +126,19 @@ public class SlidingDotView extends DotView {
 
     @Override
     public void stopDotAnimation() {
-        if (animatorDisappearSet != null) {
-            animatorDisappearSet.isStarted();
+        if (animatorDisappearSet != null && animatorDisappearSet.isStarted()) {
             animatorDisappearSet.cancel();
         }
-        if (animatorAppearSet != null) {
-            animatorAppearSet.isStarted();
+
+        if (animatorAppearSet != null && animatorAppearSet.isStarted()) {
             animatorAppearSet.cancel();
         }
     }
 
     @Override
     public boolean isAnimating() {
-        if (animatorDisappearSet != null && animatorDisappearSet.isStarted()) {
-            return true;
-        }
-
-        if (animatorAppearSet != null && animatorAppearSet.isStarted()) {
-            return true;
-        }
-
-        return false;
+        return (animatorDisappearSet != null && animatorDisappearSet.isStarted())
+                || (animatorAppearSet != null && animatorAppearSet.isStarted());
     }
 
     @Override
