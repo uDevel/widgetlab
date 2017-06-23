@@ -9,6 +9,6 @@ import android.support.annotation.IntRange;
 public interface SequenceGenerator {
 
     @IntRange(from = 0)
-    int nextIndex(@IntRange(from = -1) int currentIndex, int numberOfElements);
+    int nextIndex(int numberOfElements);
 
 }

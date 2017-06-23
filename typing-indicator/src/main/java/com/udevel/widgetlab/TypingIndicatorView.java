@@ -47,6 +47,10 @@ public class TypingIndicatorView extends LinearLayout {
     private static final int ANIMATE_ORDER_DEF_VALUE = Order.RANDOM;
     private static final int ANIMATE_FREQUENCY_DEF_VALUE = 1000;
 
+    private final Handler handler = new Handler();
+    private final Random random = new Random();
+    private final List<DotView> dotViewList = new ArrayList<>();
+
     @IntRange(from = 1)
     private int numOfDots;
 
@@ -84,27 +88,19 @@ public class TypingIndicatorView extends LinearLayout {
     @IntRange(from = 1)
     private int animateFrequency;
 
-    private SequenceGenerator sequenceGenerator;
-    private int currentAnimateDotIndex = 0;
-
     private Paint backgroundPaint;
-    private final Handler handler = new Handler();
-    private final Random random = new Random();
-    private final List<DotView> dotViewList = new ArrayList<>();
-
+    private SequenceGenerator sequenceGenerator;
     private final Runnable dotAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            int nextAnimateDotIndex = sequenceGenerator.nextIndex(currentAnimateDotIndex, numOfDots);
+            int nextAnimateDotIndex = sequenceGenerator.nextIndex(numOfDots);
             dotViewList.get(nextAnimateDotIndex).startDotAnimation();
             long delayMillis = (animateFrequency < 0L) ? (long) (500L + (2000L * random.nextFloat())) : animateFrequency;
             if (isAnimationStarted) {
                 handler.postDelayed(dotAnimationRunnable, delayMillis);
             }
-            currentAnimateDotIndex = nextAnimateDotIndex;
         }
     };
-
 
     public TypingIndicatorView(Context context) {
         this(context, null);

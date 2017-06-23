@@ -5,9 +5,12 @@ package com.udevel.widgetlab.sequences;
  */
 
 public class InSequence implements SequenceGenerator {
+    private int currentIndex = -1;
+
     @Override
-    public int nextIndex(int currentIndex, int numberOfElements) {
+    public int nextIndex(int numberOfElements) {
         currentIndex++;
-        return currentIndex % numberOfElements;
+        currentIndex = currentIndex < numberOfElements ? currentIndex : 0;
+        return currentIndex;
     }
 }

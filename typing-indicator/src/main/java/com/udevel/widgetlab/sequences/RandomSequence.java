@@ -10,7 +10,7 @@ public class RandomSequence implements SequenceGenerator {
     private Random random = new Random();
 
     @Override
-    public int nextIndex(int currentIndex, int numberOfElements) {
+    public int nextIndex(int numberOfElements) {
         return random.nextInt(numberOfElements);
     }
 }

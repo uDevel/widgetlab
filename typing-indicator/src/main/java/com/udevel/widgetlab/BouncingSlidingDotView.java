@@ -199,8 +199,7 @@ public class BouncingSlidingDotView extends DotView {
 
         bounceAnimatorList.add(initialDownAnimator);
 
-        int i = indexToParent;
-        while (i-- > 0) {
+        for (int i = 0; i < indexToParent; i++) {
             ValueAnimator upAnimator = ValueAnimator.ofInt(0, -startTop);
             upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 

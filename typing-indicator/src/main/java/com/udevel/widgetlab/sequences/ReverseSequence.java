@@ -5,9 +5,12 @@ package com.udevel.widgetlab.sequences;
  */
 
 public class ReverseSequence implements SequenceGenerator {
+    private int currentIndex = -1;
+
     @Override
-    public int nextIndex(int currentIndex, int numberOfElements) {
+    public int nextIndex(int numberOfElements) {
         currentIndex--;
-        return (currentIndex < 0) ? numberOfElements - 1 : currentIndex;
+        currentIndex = (currentIndex < 0) ? numberOfElements - 1 : currentIndex;
+        return currentIndex;
     }
 }
