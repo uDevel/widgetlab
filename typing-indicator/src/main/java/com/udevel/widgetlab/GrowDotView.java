@@ -17,14 +17,15 @@ import java.util.List;
 
 public class GrowDotView extends DotView {
     private final Paint paint = new Paint();
+    private final RectF ovalRectF = new RectF();
+
     private int centerX;
     private int centerY;
     private float radius;
     private float targetScale = 0.7F;
     private float scale = targetScale;
-    private RectF ovalRectF = new RectF();
-    private AnimatorSet animatorSet;
 
+    private AnimatorSet animatorSet;
 
     public GrowDotView(Context context) {
         super(context);

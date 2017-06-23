@@ -13,7 +13,7 @@ import static com.udevel.widgetlab.definitions.AnimationType.WINK;
 
 
 /**
- * Created by joragu on 6/21/2017.
+ * Created by yombunker on 6/21/2017.
  */
 
 @IntDef(value = {GROW, WINK, DISAPPEAR, SLIDING, BOUNCING_SLIDING})

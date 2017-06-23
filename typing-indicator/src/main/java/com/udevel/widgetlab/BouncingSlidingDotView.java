@@ -77,11 +77,6 @@ public class BouncingSlidingDotView extends DotView {
     }
 
     @Override
-    public void setColor(@ColorInt int color) {
-        super.setColor(color);
-    }
-
-    @Override
     public void setAnimationDuration(long duration) {
         super.setAnimationDuration(duration);
         growDisappearAnimationDuration = animationTotalDuration / 2;

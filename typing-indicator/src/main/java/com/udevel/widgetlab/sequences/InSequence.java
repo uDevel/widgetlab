@@ -1,7 +1,7 @@
 package com.udevel.widgetlab.sequences;
 
 /**
- * Created by joragu on 6/21/2017.
+ * Created by yombunker on 6/21/2017.
  */
 
 public class InSequence implements SequenceGenerator {

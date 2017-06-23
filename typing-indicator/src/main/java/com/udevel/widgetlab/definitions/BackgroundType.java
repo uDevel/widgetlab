@@ -9,7 +9,7 @@ import static com.udevel.widgetlab.definitions.BackgroundType.ROUNDED;
 import static com.udevel.widgetlab.definitions.BackgroundType.SQUARE;
 
 /**
- * Created by joragu on 6/21/2017.
+ * Created by yombunker on 6/21/2017.
  */
 
 @IntDef(value = {ROUNDED, SQUARE})

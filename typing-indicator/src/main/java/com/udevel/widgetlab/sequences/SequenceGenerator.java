@@ -3,7 +3,7 @@ package com.udevel.widgetlab.sequences;
 import android.support.annotation.IntRange;
 
 /**
- * Created by joragu on 6/21/2017.
+ * Created by yombunker on 6/21/2017.
  */
 
 public interface SequenceGenerator {

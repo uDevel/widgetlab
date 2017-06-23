@@ -12,7 +12,7 @@ import static com.udevel.widgetlab.definitions.Order.RANDOM_NO_REPETITION;
 import static com.udevel.widgetlab.definitions.Order.SEQUENCE;
 
 /**
- * Created by joragu on 6/21/2017.
+ * Created by yombunker on 6/21/2017.
  */
 
 @IntDef(value = {RANDOM, RANDOM_NO_REPETITION, SEQUENCE, CIRCULAR, LAST_FIRST})

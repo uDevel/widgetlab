@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 /**
- * Created by joragu on 6/23/2017.
+ * Created by yombunker on 6/23/2017.
  */
 public class InSequenceTest {
     private SequenceGenerator sequenceGenerator;
