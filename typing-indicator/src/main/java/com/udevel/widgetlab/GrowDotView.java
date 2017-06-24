@@ -12,17 +12,20 @@ import android.graphics.RectF;
 import android.support.annotation.FloatRange;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GrowDotView extends DotView {
-    private static final String TAG = GrowDotView.class.getSimpleName();
-    private Paint paint = new Paint();
+    private final Paint paint = new Paint();
+    private final RectF ovalRectF = new RectF();
+
     private int centerX;
     private int centerY;
     private float radius;
-
-    private RectF ovalRectF = new RectF();
-    private AnimatorSet animatorSet;
     private float targetScale = 0.7F;
     private float scale = targetScale;
+
+    private AnimatorSet animatorSet;
 
     public GrowDotView(Context context) {
         super(context);
@@ -37,8 +40,11 @@ public class GrowDotView extends DotView {
     public void startDotAnimation() {
         stopDotAnimation();
 
+        // TODO: Fix bug for when the color of the dots change, we need to reset the AnimatorSet
         if (animatorSet == null) {
             animatorSet = new AnimatorSet();
+            List<Animator> animations = new ArrayList<>(2);
+
             ValueAnimator growAnimator = ValueAnimator.ofFloat(targetScale, 1.0F);
             growAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -53,6 +59,7 @@ public class GrowDotView extends DotView {
             growAnimator.setInterpolator(new FastOutSlowInInterpolator());
             growAnimator.setRepeatCount(1);
             growAnimator.setRepeatMode(ValueAnimator.REVERSE);
+            animations.add(growAnimator);
 
             if (dotFirstColor != dotSecondColor) {
                 ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), dotFirstColor, dotSecondColor);
@@ -67,11 +74,10 @@ public class GrowDotView extends DotView {
                 colorAnimator.setInterpolator(new FastOutSlowInInterpolator());
                 colorAnimator.setRepeatCount(1);
                 colorAnimator.setRepeatMode(ValueAnimator.REVERSE);
-                animatorSet.playTogether(growAnimator, colorAnimator);
-            } else {
-                animatorSet.playTogether(growAnimator);
+                animations.add(colorAnimator);
             }
 
+            animatorSet.playTogether(animations);
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
@@ -94,10 +100,7 @@ public class GrowDotView extends DotView {
 
     @Override
     public boolean isAnimating() {
-        if (animatorSet != null) {
-            return animatorSet.isStarted();
-        }
-        return false;
+        return animatorSet != null && animatorSet.isStarted();
     }
 
     @Override

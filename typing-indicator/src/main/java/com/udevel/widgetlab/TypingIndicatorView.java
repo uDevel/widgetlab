@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Handler;
+import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -15,111 +18,89 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.udevel.widgetlab.definitions.AnimationType;
+import com.udevel.widgetlab.definitions.BackgroundType;
+import com.udevel.widgetlab.definitions.Order;
+import com.udevel.widgetlab.sequences.CircularSequence;
+import com.udevel.widgetlab.sequences.InSequence;
+import com.udevel.widgetlab.sequences.RandomNoRepetitionSequence;
+import com.udevel.widgetlab.sequences.RandomSequence;
+import com.udevel.widgetlab.sequences.ReverseSequence;
+import com.udevel.widgetlab.sequences.SequenceGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class TypingIndicatorView extends LinearLayout {
-    public static final int ANIMATE_ORDER_RANDOM = 0;
-    public static final int ANIMATE_ORDER_SEQUENCE = 1;
-    public static final int ANIMATE_ORDER_CIRCULAR = 2;
-    public static final int ANIMATE_ORDER_LAST_FIRST = 3;
-    public static final int BACKGROUND_TYPE_ROUNDED = 1;
-    public static final int BACKGROUND_TYPE_SQUARE = 0;
-    public static final int DOT_ANIMATION_GROW = 0;
-    public static final int DOT_ANIMATION_WINK = 1;
-    public static final int DOT_ANIMATION_DISAPPEAR = 2;
-    public static final int DOT_ANIMATION_SLIDING = 3;
-    public static final int DOT_ANIMATION_BOUNCING_SLIDING = 4;
     private static final String TAG = TypingIndicatorView.class.getSimpleName();
-    private static final int BACKGROUND_TYPE_DEF_VALUE = BACKGROUND_TYPE_SQUARE;
+
+    private static final int BACKGROUND_TYPE_DEF_VALUE = BackgroundType.SQUARE;
+    private static final int BACKGROUND_COLOR_DEF_VALUE = Color.LTGRAY;
+    private static final int DOT_ANIMATION_TYPE_DEF_VALUE = AnimationType.GROW;
     private static final int DOT_COUNT_DEF_VALUE = 3;
     private static final int DOT_SIZE_DEF_VALUE = 24;
     private static final int DOT_COLOR_DEF_VALUE = Color.LTGRAY;
     private static final float DOT_MAX_COMPRESS_RATIO_DEF_VALUE = 0.5F;
     private static final int DOT_ANIMATION_DURATION_DEF_VALUE = 600;
-    private static final int DOT_ANIMATION_TYPE_DEF_VALUE = DOT_ANIMATION_GROW;
     private static final int DOT_HORIZONTAL_SPACING_DEF_VALUE = 20;
-    private static final int BACKGROUND_COLOR_DEF_VALUE = Color.LTGRAY;
-    private static final int ANIMATE_ORDER_DEF_VALUE = ANIMATE_ORDER_RANDOM;
+    private static final int ANIMATE_ORDER_DEF_VALUE = Order.RANDOM;
     private static final int ANIMATE_FREQUENCY_DEF_VALUE = 1000;
-    private Handler handler = new Handler();
-    private List<DotView> dotViewList = new ArrayList<>();
-    private int numOfDots;
-    private Random random = new Random();
-    private boolean isAnimationStarted;
-    private int dotHorizontalSpacing;
-    private int dotSize;
-    private float dotMaxCompressRatio;
-    private Paint backgroundPaint;
-    private boolean isShowBackground;
-    private int backgroundType;
-    private int backgroundColor;
-    private int dotColor;
-    private int dotSecondColor;
-    private int dotAnimationDuration;
-    private int dotAnimationType;
-    private int animateFrequency;
-    private int animationOrder;
-    private int nextAnimateDotIndex = 0;
-    private boolean animateDotIndexDirectionPositive = true;
 
-    private Runnable dotAnimationRunnable = new Runnable() {
+    private final Handler handler = new Handler();
+    private final Random random = new Random();
+    private final List<DotView> dotViewList = new ArrayList<>();
+
+    @IntRange(from = 1)
+    private int numOfDots;
+
+    private boolean isAnimationStarted;
+
+    @IntRange(from = 0)
+    private int dotHorizontalSpacing;
+
+    @IntRange(from = 1)
+    private int dotSize;
+
+    @FloatRange(from = 0F, to = 1F)
+    private float dotMaxCompressRatio;
+
+    private boolean isShowBackground;
+
+    @BackgroundType
+    private int backgroundType;
+
+    @ColorInt
+    private int backgroundColor;
+
+    @AnimationType
+    private int dotAnimationType;
+
+    @ColorInt
+    private int dotColor;
+
+    @ColorInt
+    private int dotSecondColor;
+
+    @IntRange(from = 1)
+    private int dotAnimationDuration;
+
+    @IntRange(from = 1)
+    private int animateFrequency;
+
+    private Paint backgroundPaint;
+    private SequenceGenerator sequenceGenerator;
+    private final Runnable dotAnimationRunnable = new Runnable() {
         @Override
         public void run() {
-            int dotsCount = dotViewList.size();
-
-            int animateDotIndex = 0;
-            switch (animationOrder) {
-                case ANIMATE_ORDER_RANDOM:
-                    animateDotIndex = random.nextInt(dotsCount);
-                    break;
-                case ANIMATE_ORDER_SEQUENCE:
-                    animateDotIndex = nextAnimateDotIndex;
-                    nextAnimateDotIndex++;
-                    if (nextAnimateDotIndex >= dotsCount) {
-                        nextAnimateDotIndex = 0;
-                    }
-                    break;
-                case ANIMATE_ORDER_LAST_FIRST:
-                    animateDotIndex = dotsCount - 1 - nextAnimateDotIndex;
-                    nextAnimateDotIndex++;
-                    if (nextAnimateDotIndex >= dotsCount) {
-                        nextAnimateDotIndex = 0;
-                    }
-                    break;
-                case ANIMATE_ORDER_CIRCULAR:
-                    animateDotIndex = nextAnimateDotIndex;
-
-                    if (animateDotIndexDirectionPositive) {
-                        nextAnimateDotIndex++;
-                        if (nextAnimateDotIndex >= dotsCount - 1) {
-                            animateDotIndexDirectionPositive = false;
-                        }
-                    } else {
-                        nextAnimateDotIndex--;
-                        if (nextAnimateDotIndex <= 0) {
-                            animateDotIndexDirectionPositive = true;
-                        }
-                    }
-                    break;
-
-            }
-
-            dotViewList.get(animateDotIndex).startDotAnimation();
-            long delayMillis;
-            if (animateFrequency < 0L) {
-                delayMillis = (long) (500L + (2000L * random.nextFloat()));
-            } else {
-                delayMillis = animateFrequency;
-            }
-
+            int nextAnimateDotIndex = sequenceGenerator.nextIndex(numOfDots);
+            dotViewList.get(nextAnimateDotIndex).startDotAnimation();
+            long delayMillis = (animateFrequency < 0L) ? (long) (500L + (2000L * random.nextFloat())) : animateFrequency;
             if (isAnimationStarted) {
                 handler.postDelayed(dotAnimationRunnable, delayMillis);
             }
         }
     };
-
 
     public TypingIndicatorView(Context context) {
         this(context, null);
@@ -193,12 +174,13 @@ public class TypingIndicatorView extends LinearLayout {
     protected void onDraw(Canvas canvas) {
         int radius = Math.min(getWidth(), getHeight()) / 2;
         switch (backgroundType) {
-            case BACKGROUND_TYPE_ROUNDED:
+            case BackgroundType.ROUNDED:
                 canvas.drawCircle(radius, radius, radius, backgroundPaint);
                 canvas.drawCircle(getWidth() - radius, radius, radius, backgroundPaint);
                 canvas.drawRect(radius, 0, getWidth() - radius, getHeight(), backgroundPaint);
                 break;
-            case BACKGROUND_TYPE_SQUARE:
+            case BackgroundType.SQUARE:
+            default:
                 canvas.drawRect(0, 0, getWidth(), getHeight(), backgroundPaint);
                 break;
         }
@@ -227,6 +209,7 @@ public class TypingIndicatorView extends LinearLayout {
 
     private void parseAttributes(@NonNull Context context, @Nullable AttributeSet attrs) {
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TypingIndicatorView, 0, 0);
+        int animationOrder;
 
         try {
             dotSize = a.getDimensionPixelOffset(R.styleable.TypingIndicatorView_dotSize, DOT_SIZE_DEF_VALUE);
@@ -250,9 +233,11 @@ public class TypingIndicatorView extends LinearLayout {
             throw new IllegalArgumentException("dotMaxCompressRatio must be between 0% and 100%");
         }
 
-        if (dotAnimationType == DOT_ANIMATION_DISAPPEAR && animationOrder != ANIMATE_ORDER_SEQUENCE) {
-            animationOrder = ANIMATE_ORDER_SEQUENCE;
+        if (dotAnimationType == AnimationType.DISAPPEAR) {
+            animationOrder = Order.SEQUENCE;
         }
+
+        setAnimationOrder(animationOrder);
     }
 
     private void init() {
@@ -264,36 +249,57 @@ public class TypingIndicatorView extends LinearLayout {
             backgroundPaint.setColor(backgroundColor);
         }
 
+        int halfHorizontalSpacing = dotHorizontalSpacing / 2;
         for (int i = 0; i < numOfDots; i++) {
-            DotView dotView;
-            switch (dotAnimationType) {
-                case DOT_ANIMATION_BOUNCING_SLIDING:
-                    dotView = new BouncingSlidingDotView(getContext());
-                    break;
-                case DOT_ANIMATION_SLIDING:
-                    dotView = new SlidingDotView(getContext());
-                    break;
-                case DOT_ANIMATION_WINK:
-                    dotView = new WinkDotView(getContext());
-                    break;
-                case DOT_ANIMATION_DISAPPEAR:
-                    dotView = new DisappearDotView(getContext());
-                    break;
-                case DOT_ANIMATION_GROW:
-                default:
-                    dotView = new GrowDotView(getContext());
-                    break;
-            }
-            dotView.setAnimationDuration(dotAnimationDuration);
-            dotView.setMaxCompressRatio(dotMaxCompressRatio);
-            dotView.setColor(dotColor);
-            dotView.setSecondColor(dotSecondColor);
+            DotView dotView = createDotView(dotAnimationType);
             LinearLayout.LayoutParams layoutParams = new LayoutParams(dotSize, dotSize);
-            int halfHorizontalSpacing = dotHorizontalSpacing / 2;
             layoutParams.setMargins(halfHorizontalSpacing, 0, halfHorizontalSpacing, 0);
-
             addView(dotView, layoutParams);
             dotViewList.add(dotView);
+        }
+    }
+
+    private DotView createDotView(@AnimationType int dotAnimationType) {
+        Context context = getContext();
+        DotView dotView;
+        switch (dotAnimationType) {
+            case AnimationType.BOUNCING_SLIDING:
+                dotView = new BouncingSlidingDotView(context);
+                break;
+            case AnimationType.SLIDING:
+                dotView = new SlidingDotView(context);
+                break;
+            case AnimationType.WINK:
+                dotView = new WinkDotView(context);
+                break;
+            case AnimationType.DISAPPEAR:
+                dotView = new DisappearDotView(context);
+                break;
+            case AnimationType.GROW:
+            default:
+                dotView = new GrowDotView(context);
+                break;
+        }
+
+        dotView.setAnimationDuration(dotAnimationDuration);
+        dotView.setMaxCompressRatio(dotMaxCompressRatio);
+        dotView.setColor(dotColor);
+        dotView.setSecondColor(dotSecondColor);
+        return dotView;
+    }
+
+    public void setAnimationOrder(@Order int animationOrder) {
+        switch (animationOrder) {
+            case Order.CIRCULAR:
+                sequenceGenerator = new CircularSequence();
+            case Order.LAST_FIRST:
+                sequenceGenerator = new ReverseSequence();
+            case Order.RANDOM_NO_REPETITION:
+                sequenceGenerator = new RandomNoRepetitionSequence();
+            case Order.SEQUENCE:
+                sequenceGenerator = new InSequence();
+            case Order.RANDOM:
+                sequenceGenerator = new RandomSequence();
         }
     }
 }

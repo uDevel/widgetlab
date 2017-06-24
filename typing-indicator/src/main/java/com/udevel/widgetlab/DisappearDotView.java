@@ -12,16 +12,17 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 public class DisappearDotView extends DotView {
-    private static final String TAG = DisappearDotView.class.getSimpleName();
-    private Paint paint = new Paint();
+    private final Paint paint = new Paint();
+
     private int centerX;
     private int centerY;
     private float radius;
     private boolean isAnimatingDisappear = false;
+    private float scale = 1F;
 
     private AnimatorSet animatorDisappearSet;
     private AnimatorSet animatorAppearSet;
-    private float scale = 1F;
+
 
     public DisappearDotView(Context context) {
         super(context);
@@ -38,17 +39,19 @@ public class DisappearDotView extends DotView {
         super.onLayout(changed, left, top, right, bottom);
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
-        radius = (Math.min(getWidth(), getHeight()) / 2) / 1.2F;    // Save space for overshoot interpolator.
+        radius = Math.min(centerX, centerY) / 1.2F;    // Save space for overshoot interpolator.
     }
 
     @Override
     protected void init() {
-        paint = new Paint();
+        // nothing to do here
     }
 
     @Override
     public void startDotAnimation() {
         stopDotAnimation();
+
+        // TODO: Fix bug for when the color of the dots change, we need to reset the AnimatorSet
         if (isAnimatingDisappear) {
             isAnimatingDisappear = false;
             if (animatorAppearSet == null) {
@@ -112,27 +115,19 @@ public class DisappearDotView extends DotView {
 
     @Override
     public void stopDotAnimation() {
-        if (animatorDisappearSet != null) {
-            animatorDisappearSet.isStarted();
+        if (animatorDisappearSet != null && animatorDisappearSet.isStarted()) {
             animatorDisappearSet.cancel();
         }
-        if (animatorAppearSet != null) {
-            animatorAppearSet.isStarted();
+
+        if (animatorAppearSet != null && animatorAppearSet.isStarted()) {
             animatorAppearSet.cancel();
         }
     }
 
     @Override
     public boolean isAnimating() {
-        if (animatorDisappearSet != null && animatorDisappearSet.isStarted()) {
-            return true;
-        }
-
-        if (animatorAppearSet != null && animatorAppearSet.isStarted()) {
-            return true;
-        }
-
-        return false;
+        return (animatorDisappearSet != null && animatorDisappearSet.isStarted())
+                || (animatorAppearSet != null && animatorAppearSet.isStarted());
     }
 
     @Override
