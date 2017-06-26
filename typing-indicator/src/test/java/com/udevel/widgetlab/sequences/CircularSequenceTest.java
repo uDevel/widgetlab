@@ -16,7 +16,7 @@ public class CircularSequenceTest {
 
     @Before
     public void setUp() throws Exception {
-        sequenceGenerator = new CircularSequence();
+        sequenceGenerator = new CircularSequenceGenerator();
         numberOfElements = 5;
         numberOfSamples = (numberOfElements * 3) - 2;
     }

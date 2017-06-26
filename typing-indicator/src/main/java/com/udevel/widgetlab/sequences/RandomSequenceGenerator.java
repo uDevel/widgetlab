@@ -6,11 +6,11 @@ import java.util.Random;
  * Created by yombunker on 6/21/2017.
  */
 
-public class RandomSequence implements SequenceGenerator {
+public class RandomSequenceGenerator extends SequenceGenerator {
     private final Random random = new Random();
 
     @Override
-    public int nextIndex(int numberOfElements) {
+    protected int nextIndex(int currentIndex, int numberOfElements) {
         return random.nextInt(numberOfElements);
     }
 }

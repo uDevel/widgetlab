@@ -16,7 +16,7 @@ public class ReverseSequenceTest {
 
     @Before
     public void setUp() throws Exception {
-        sequenceGenerator = new ReverseSequence();
+        sequenceGenerator = new ReverseSequenceGenerator();
         numberOfElements = 5;
         numberOfSamples = numberOfElements * 2;
     }
