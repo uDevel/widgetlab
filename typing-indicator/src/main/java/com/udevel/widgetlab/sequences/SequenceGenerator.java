@@ -6,7 +6,6 @@ import android.util.Log;
 /**
  * Created by yombunker on 6/21/2017.
  */
-
 public abstract class SequenceGenerator {
     private static final String TAG = SequenceGenerator.class.getSimpleName();
     private int currentIndex = -1;
