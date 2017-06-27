@@ -16,7 +16,7 @@ public class InSequenceTest {
 
     @Before
     public void setUp() throws Exception {
-        sequenceGenerator = new InSequence();
+        sequenceGenerator = new InSequenceGenerator();
         numberOfElements = 5;
         numberOfSamples = numberOfElements * 2;
     }

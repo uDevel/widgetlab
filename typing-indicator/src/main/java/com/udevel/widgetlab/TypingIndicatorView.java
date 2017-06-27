@@ -21,11 +21,11 @@ import android.widget.LinearLayout;
 import com.udevel.widgetlab.definitions.AnimationType;
 import com.udevel.widgetlab.definitions.BackgroundType;
 import com.udevel.widgetlab.definitions.Order;
-import com.udevel.widgetlab.sequences.CircularSequence;
-import com.udevel.widgetlab.sequences.InSequence;
-import com.udevel.widgetlab.sequences.RandomNoRepetitionSequence;
-import com.udevel.widgetlab.sequences.RandomSequence;
-import com.udevel.widgetlab.sequences.ReverseSequence;
+import com.udevel.widgetlab.sequences.CircularSequenceGenerator;
+import com.udevel.widgetlab.sequences.InSequenceGenerator;
+import com.udevel.widgetlab.sequences.RandomNoRepetitionSequenceGenerator;
+import com.udevel.widgetlab.sequences.RandomSequenceGenerator;
+import com.udevel.widgetlab.sequences.ReverseSequenceGenerator;
 import com.udevel.widgetlab.sequences.SequenceGenerator;
 
 import java.util.ArrayList;
@@ -291,15 +291,15 @@ public class TypingIndicatorView extends LinearLayout {
     public void setAnimationOrder(@Order int animationOrder) {
         switch (animationOrder) {
             case Order.CIRCULAR:
-                sequenceGenerator = new CircularSequence();
+                sequenceGenerator = new CircularSequenceGenerator();
             case Order.LAST_FIRST:
-                sequenceGenerator = new ReverseSequence();
+                sequenceGenerator = new ReverseSequenceGenerator();
             case Order.RANDOM_NO_REPETITION:
-                sequenceGenerator = new RandomNoRepetitionSequence();
+                sequenceGenerator = new RandomNoRepetitionSequenceGenerator();
             case Order.SEQUENCE:
-                sequenceGenerator = new InSequence();
+                sequenceGenerator = new InSequenceGenerator();
             case Order.RANDOM:
-                sequenceGenerator = new RandomSequence();
+                sequenceGenerator = new RandomSequenceGenerator();
         }
     }
 }
