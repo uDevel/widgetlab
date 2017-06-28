@@ -36,7 +36,7 @@ allprojects {
 Next add to your module level (app) build.gradle's dependencies block like this
 ```xml
 dependencies {
-          compile 'com.github.uDevel:widgetlab:0.9.4'
+          compile 'com.github.uDevel:widgetlab:0.9.5'
 }
 ```
 
