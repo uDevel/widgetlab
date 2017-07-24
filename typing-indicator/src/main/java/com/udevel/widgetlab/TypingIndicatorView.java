@@ -292,14 +292,19 @@ public class TypingIndicatorView extends LinearLayout {
         switch (animationOrder) {
             case Order.CIRCULAR:
                 sequenceGenerator = new CircularSequenceGenerator();
+                break;
             case Order.LAST_FIRST:
                 sequenceGenerator = new ReverseSequenceGenerator();
+                break;
             case Order.RANDOM_NO_REPETITION:
                 sequenceGenerator = new RandomNoRepetitionSequenceGenerator();
+                break;
             case Order.SEQUENCE:
                 sequenceGenerator = new InSequenceGenerator();
+                break;
             case Order.RANDOM:
                 sequenceGenerator = new RandomSequenceGenerator();
+                break;
         }
     }
 }
