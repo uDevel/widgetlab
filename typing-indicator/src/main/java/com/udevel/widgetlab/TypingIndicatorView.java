@@ -189,8 +189,13 @@ public class TypingIndicatorView extends LinearLayout {
     @UiThread
     public void stopDotAnimation() {
         isAnimationStarted = false;
-        handler.removeCallbacks(dotAnimationRunnable);
 
+        // There is a report saying NPE here.  Not sure how is it possible.
+        try {
+            handler.removeCallbacks(dotAnimationRunnable);
+        } catch (Exception ex) {
+            Log.e(TAG, "stopDotAnimation: weird crash", ex);
+        }
     }
 
     @UiThread
@@ -205,6 +210,26 @@ public class TypingIndicatorView extends LinearLayout {
 
     public boolean isAnimationStarted() {
         return isAnimationStarted;
+    }
+
+    public void setAnimationOrder(@Order int animationOrder) {
+        switch (animationOrder) {
+            case Order.CIRCULAR:
+                sequenceGenerator = new CircularSequenceGenerator();
+                break;
+            case Order.LAST_FIRST:
+                sequenceGenerator = new ReverseSequenceGenerator();
+                break;
+            case Order.RANDOM_NO_REPETITION:
+                sequenceGenerator = new RandomNoRepetitionSequenceGenerator();
+                break;
+            case Order.SEQUENCE:
+                sequenceGenerator = new InSequenceGenerator();
+                break;
+            case Order.RANDOM:
+                sequenceGenerator = new RandomSequenceGenerator();
+                break;
+        }
     }
 
     private void parseAttributes(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -286,25 +311,5 @@ public class TypingIndicatorView extends LinearLayout {
         dotView.setColor(dotColor);
         dotView.setSecondColor(dotSecondColor);
         return dotView;
-    }
-
-    public void setAnimationOrder(@Order int animationOrder) {
-        switch (animationOrder) {
-            case Order.CIRCULAR:
-                sequenceGenerator = new CircularSequenceGenerator();
-                break;
-            case Order.LAST_FIRST:
-                sequenceGenerator = new ReverseSequenceGenerator();
-                break;
-            case Order.RANDOM_NO_REPETITION:
-                sequenceGenerator = new RandomNoRepetitionSequenceGenerator();
-                break;
-            case Order.SEQUENCE:
-                sequenceGenerator = new InSequenceGenerator();
-                break;
-            case Order.RANDOM:
-                sequenceGenerator = new RandomSequenceGenerator();
-                break;
-        }
     }
 }
